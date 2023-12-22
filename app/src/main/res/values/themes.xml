@@ -1,0 +1,13 @@
+<resources>
+    <style name="Base.Theme.PawPalace.SplashScreen" parent="Theme.SplashScreen">
+        <item name="postSplashScreenTheme">@style/Theme.PawPalace</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/img_splash</item>
+        <item name="windowSplashScreenAnimationDuration">200</item>
+    </style>
+
+    <style name="Base.Theme.PawPalace" parent="Theme.Material3.DayNight.NoActionBar" />
+    <style name="Theme.PawPalace" parent="Base.Theme.PawPalace">
+        <item name="android:colorPrimary">@color/colorPrimary</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+    </style>
+</resources>
