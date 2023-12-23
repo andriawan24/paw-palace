@@ -9,11 +9,14 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
-import androidx.fragment.app.Fragment
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.text.isDigitsOnly
+import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.andriawan24.pawpalace.R
 import com.andriawan24.pawpalace.databinding.FragmentRegisterPetOwnerBinding
@@ -35,6 +38,96 @@ class RegisterPetOwnerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initUI()
+        initTextListener()
+    }
+
+    private fun initTextListener() {
+        binding.editTextName.doAfterTextChanged { validateName(it.toString()) }
+        binding.editTextEmail.doAfterTextChanged { validateEmail(it.toString()) }
+        binding.editTextPhone.doAfterTextChanged { validatePhoneNumber(it.toString()) }
+        binding.editTextPassword.doAfterTextChanged { validatePassword(it.toString()) }
+        binding.editTextPasswordConfirmation.doAfterTextChanged {
+            validatePasswordConfirmation(
+                binding.editTextPassword.text.toString(),
+                it.toString()
+            )
+        }
+    }
+
+    private fun validateName(name: String): Boolean {
+        if (name.isBlank()) {
+            binding.editTextLayoutName.isErrorEnabled = true
+            binding.editTextLayoutName.error = "Name cannot be empty"
+            return false
+        }
+
+        binding.editTextLayoutName.error = null
+        return true
+    }
+
+    private fun validateEmail(email: String): Boolean {
+        if (email.isBlank()) {
+            binding.editTextLayoutEmail.isErrorEnabled = true
+            binding.editTextLayoutEmail.error = "Email cannot be empty"
+            return false
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            binding.editTextLayoutEmail.isErrorEnabled = true
+            binding.editTextLayoutEmail.error = "Email is not valid"
+            return false
+        }
+
+        binding.editTextLayoutEmail.error = null
+        return true
+    }
+
+    private fun validatePhoneNumber(phoneNumber: String): Boolean {
+        if (phoneNumber.isBlank()) {
+            binding.editTextLayoutPhone.isErrorEnabled = true
+            binding.editTextLayoutPhone.error = "Phone number cannot be empty"
+            return false
+        } else if (!phoneNumber.isDigitsOnly()) {
+            binding.editTextLayoutPhone.isErrorEnabled = true
+            binding.editTextLayoutPhone.error = "Phone number must contains digit only"
+            return false
+        }
+
+        binding.editTextLayoutPhone.error = null
+        return true
+    }
+
+    private fun validatePassword(password: String): Boolean {
+        if (password.isBlank()) {
+            binding.editTextLayoutPassword.isErrorEnabled = true
+            binding.editTextLayoutPassword.error = "Password cannot be empty"
+            return false
+        } else if (password.count() !in 8..12) {
+            binding.editTextLayoutPassword.isErrorEnabled = true
+            binding.editTextLayoutPassword.error = "Password length must be between 8 and 12"
+            return false
+        }
+
+        binding.editTextLayoutPassword.error = null
+        return true
+    }
+
+    private fun validatePasswordConfirmation(
+        password: String,
+        passwordConfirmation: String
+    ): Boolean {
+        if (passwordConfirmation.isBlank()) {
+            binding.editTextLayoutPasswordConfirmation.isErrorEnabled = true
+            binding.editTextLayoutPasswordConfirmation.error =
+                "Password confirmation cannot be empty"
+            return false
+        } else if (password != passwordConfirmation) {
+            binding.editTextLayoutPasswordConfirmation.isErrorEnabled = true
+            binding.editTextLayoutPasswordConfirmation.error =
+                "Password confirmation is not the same"
+            return false
+        }
+
+        binding.editTextLayoutPasswordConfirmation.error = null
+        return true
     }
 
     private fun initUI() {
