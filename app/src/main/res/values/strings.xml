@@ -3,4 +3,27 @@
     <string name="sign_in_pet_shop_button_title">I Have a Pet Shop</string>
     <string name="sign_in_pet_owner_button_title">I\'m A Pet Owner</string>
     <string name="onboarding_image_content_description">Onboarding Image View</string>
+    <string name="sign_in_subtitle">It’s nice to see you, please sign in to continue!</string>
+    <string name="email">Email Address</string>
+    <string name="email_hint">Type your email address</string>
+    <string name="password_hint">Type your password</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="or">or</string>
+    <string name="sign_in_pet_shop">Sign In as A Pet Shop</string>
+    <string name="sign_in_pet_owner_title">Sign In as a Pet’s Owner</string>
+    <string name="do_not_have_account_title">Not have an account yet? Sign Up</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sign_up_subtitle">It’s nice to see you, fill the blank input below here to sign up.</string>
+    <string name="name">Name</string>
+    <string name="name_hint">Type your full name</string>
+    <string name="email_register_hint">Type your email (example: pawpalace@gmail.com)</string>
+    <string name="phone">Phone Number</string>
+    <string name="phone_hint">Type your phone number (example: 081233445566)</string>
+    <string name="password_confirmation">Password Confirmation</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_up_pet_shop">Sign Up as A Pet Shop</string>
+    <string name="sign_up_pet_owner_title">Sign Up as a Pet’s Owner</string>
+    <string name="already_have_account_title">Already have an account? Sign In</string>
 </resources>

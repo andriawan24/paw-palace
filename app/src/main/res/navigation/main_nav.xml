@@ -11,14 +11,19 @@
         tools:layout="@layout/fragment_onboarding" >
         <action
             android:id="@+id/action_onboardingFragment_to_loginFragment"
-            app:destination="@id/loginFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@id/onboardingFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/loginPetOwnerFragment" />
     </fragment>
     <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.andriawan24.pawpalace.features.login.presenters.LoginFragment"
+        android:id="@+id/loginPetOwnerFragment"
+        android:name="com.andriawan24.pawpalace.features.login.presenters.LoginPetOwnerFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login_pet_owner" >
+        <action
+            android:id="@+id/action_loginPetOwnerFragment_to_registerPetOwnerFragment"
+            app:destination="@id/registerPetOwnerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerPetOwnerFragment"
+        android:name="com.andriawan24.pawpalace.features.register.presenters.RegisterPetOwnerFragment"
+        android:label="RegisterPetOwnerFragment" />
 </navigation>

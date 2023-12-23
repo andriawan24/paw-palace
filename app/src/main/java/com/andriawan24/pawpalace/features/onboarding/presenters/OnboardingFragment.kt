@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.andriawan24.pawpalace.R
 import com.andriawan24.pawpalace.adapters.OnboardingAdapter
 import com.andriawan24.pawpalace.data.models.OnboardingModel
@@ -18,7 +19,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class OnboardingFragment: Fragment() {
+class OnboardingFragment : Fragment() {
 
     private val viewModel: OnboardingVM by viewModels()
     private val adapter = OnboardingAdapter()
@@ -37,6 +38,16 @@ class OnboardingFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initUI()
+        initClickListener()
+    }
+
+    private fun initClickListener() {
+        binding.buttonSignInPetOwner.setOnClickListener {
+            findNavController().navigate(
+                OnboardingFragmentDirections
+                    .actionOnboardingFragmentToLoginFragment()
+            )
+        }
     }
 
     private fun initUI() {
