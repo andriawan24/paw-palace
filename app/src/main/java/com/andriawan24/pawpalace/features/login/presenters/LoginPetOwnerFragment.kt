@@ -53,7 +53,7 @@ class LoginPetOwnerFragment : Fragment() {
             val password = binding.editTextPassword.text.toString()
 
             if (validateInput(email, password)) {
-                // Do sign in
+                findNavController().navigate(LoginPetOwnerFragmentDirections.actionLoginPetOwnerFragmentToHomeFragment())
             }
         }
     }

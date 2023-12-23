@@ -39,6 +39,66 @@ class RegisterPetOwnerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initUI()
         initTextListener()
+        initClickListener()
+    }
+
+    private fun initClickListener() {
+        binding.buttonSignUp.setOnClickListener {
+            val name = binding.editTextName.text.toString()
+            val email = binding.editTextEmail.text.toString()
+            val phoneNumber = binding.editTextPhone.text.toString()
+            val password = binding.editTextPassword.text.toString()
+            val passwordConfirmation = binding.editTextPasswordConfirmation.text.toString()
+
+            if (validateInput(name, email, phoneNumber, password, passwordConfirmation)) {
+                // Do something
+            }
+        }
+    }
+
+    private fun initUI() {
+        var title = getString(R.string.sign_up_pet_owner_title)
+        var titleToChange = "Pet’s Owner"
+        var spannable = SpannableString(title)
+        spannable.setSpan(
+            ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.colorPrimary)),
+            title.indexOf(titleToChange),
+            title.count(),
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        binding.textViewSignUpPetOwnerTitle.text = spannable
+
+        title = getString(R.string.already_have_account_title)
+        titleToChange = "Sign In"
+        spannable = SpannableString(title)
+        spannable.setSpan(
+            ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.colorPrimary)),
+            title.indexOf(titleToChange),
+            title.count(),
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        spannable.setSpan(
+            StyleSpan(Typeface.BOLD),
+            title.indexOf(titleToChange),
+            title.count(),
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        spannable.setSpan(
+            object : ClickableSpan() {
+                override fun onClick(view: View) {
+                    findNavController().navigateUp()
+                }
+
+                override fun updateDrawState(ds: TextPaint) {
+                    ds.isUnderlineText = false
+                }
+            },
+            title.indexOf(titleToChange),
+            title.count(),
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        binding.textViewLogin.text = spannable
+        binding.textViewLogin.movementMethod = LinkMovementMethod()
     }
 
     private fun initTextListener() {
@@ -52,6 +112,38 @@ class RegisterPetOwnerFragment : Fragment() {
                 it.toString()
             )
         }
+    }
+
+    private fun validateInput(
+        name: String,
+        email: String,
+        phoneNumber: String,
+        password: String,
+        passwordConfirmation: String
+    ): Boolean {
+        var isValid = true
+
+        if (!validateName(name)) {
+            isValid = false
+        }
+
+        if (!validateEmail(email)) {
+            isValid = false
+        }
+
+        if (!validatePhoneNumber(phoneNumber)) {
+            isValid = false
+        }
+
+        if (!validatePassword(password)) {
+            isValid = false
+        }
+
+        if (!validatePasswordConfirmation(password, passwordConfirmation)) {
+            isValid = false
+        }
+
+        return isValid
     }
 
     private fun validateName(name: String): Boolean {
@@ -128,50 +220,5 @@ class RegisterPetOwnerFragment : Fragment() {
 
         binding.editTextLayoutPasswordConfirmation.error = null
         return true
-    }
-
-    private fun initUI() {
-        var title = getString(R.string.sign_up_pet_owner_title)
-        var titleToChange = "Pet’s Owner"
-        var spannable = SpannableString(title)
-        spannable.setSpan(
-            ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.colorPrimary)),
-            title.indexOf(titleToChange),
-            title.count(),
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        binding.textViewSignUpPetOwnerTitle.text = spannable
-
-        title = getString(R.string.already_have_account_title)
-        titleToChange = "Sign In"
-        spannable = SpannableString(title)
-        spannable.setSpan(
-            ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.colorPrimary)),
-            title.indexOf(titleToChange),
-            title.count(),
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        spannable.setSpan(
-            StyleSpan(Typeface.BOLD),
-            title.indexOf(titleToChange),
-            title.count(),
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        spannable.setSpan(
-            object : ClickableSpan() {
-                override fun onClick(view: View) {
-                    findNavController().navigateUp()
-                }
-
-                override fun updateDrawState(ds: TextPaint) {
-                    ds.isUnderlineText = false
-                }
-            },
-            title.indexOf(titleToChange),
-            title.count(),
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        binding.textViewLogin.text = spannable
-        binding.textViewLogin.movementMethod = LinkMovementMethod()
     }
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@id/homeFragment"
+        android:title="@string/bottom_navigation_menu_home_title"
+        android:icon="@drawable/ic_home" />
+    <item
+        android:id="@id/chatFragment"
+        android:title="@string/bottom_navigation_menu_chat_title"
+        android:icon="@drawable/ic_chat" />
+    <item
+        android:id="@id/historyFragment"
+        android:title="@string/bottom_navigation_menu_history_title"
+        android:icon="@drawable/ic_history" />
+    <item
+        android:id="@id/profileFragment"
+        android:title="@string/bottom_navigation_menu_profile_title"
+        android:icon="@drawable/ic_user" />
+</menu>

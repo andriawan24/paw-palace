@@ -26,4 +26,8 @@
     <string name="sign_up_pet_shop">Sign Up as A Pet Shop</string>
     <string name="sign_up_pet_owner_title">Sign Up as a Pet’s Owner</string>
     <string name="already_have_account_title">Already have an account? Sign In</string>
+    <string name="bottom_navigation_menu_home_title">Home</string>
+    <string name="bottom_navigation_menu_chat_title">Chat</string>
+    <string name="bottom_navigation_menu_profile_title">Profile</string>
+    <string name="bottom_navigation_menu_history_title">History</string>
 </resources>
