@@ -17,7 +17,9 @@ class PetShopItemAdapter: RecyclerView.Adapter<PetShopItemAdapter.PetShopItemVie
     ): RecyclerView.ViewHolder(binding.root) {
 
         fun bind(petShop: PetShopModel) {
-
+            binding.textViewName.text = petShop.name
+            binding.textViewRating.text = "${petShop.rating}"
+            binding.textViewSlotPrice.text = "${petShop.slot} Slot • ${petShop.dailyPrice}/hari"
         }
     }
 

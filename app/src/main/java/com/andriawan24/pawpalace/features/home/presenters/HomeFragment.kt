@@ -21,6 +21,7 @@ import com.andriawan24.pawpalace.adapters.PetShopItemAdapter
 import com.andriawan24.pawpalace.data.models.PetShopModel
 import com.andriawan24.pawpalace.databinding.FragmentHomeBinding
 import com.andriawan24.pawpalace.features.home.viewmodels.HomeVM
+import com.andriawan24.pawpalace.utils.GridSpacingItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -52,7 +53,10 @@ class HomeFragment : Fragment() {
 
     private fun initUI() {
         binding.recyclerViewPetShop.adapter = adapter
-        binding.recyclerViewPetShop.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.recyclerViewPetShop.apply {
+            layoutManager = GridLayoutManager(requireContext(), 2)
+            addItemDecoration(GridSpacingItemDecoration(2, 20))
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -84,6 +88,7 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.getPetShopsSuccess.collectLatest {
                 Timber.d("Pet Shops: $it")
+                binding.textViewPetShopCount.text = "Showing ${it.size} Pet Shop"
                 adapter.setData(it)
             }
         }
@@ -128,7 +133,6 @@ class HomeFragment : Fragment() {
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         binding.textViewTitle.text = spannable
-
         binding.textViewLocation.text = location.ifEmpty { "Location not set" }
     }
 }

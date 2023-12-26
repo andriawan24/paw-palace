@@ -7,5 +7,6 @@ data class PetShopModel(
     val location: String,
     val dailyPrice: Int,
     val slot: Int,
-    val name: String
+    val name: String,
+    val rating: Double = 0.0
 )
