@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -94,8 +95,10 @@ class HomeVM @Inject constructor(
 
                 Timber.d("getPetShops: $petShops")
 
-                _getPetShopsLoading.emit(false)
-                _getPetShopsSuccess.emit(petShops)
+                withContext(Dispatchers.Main) {
+                    _getPetShopsLoading.emit(false)
+                    _getPetShopsSuccess.emit(petShops)
+                }
             } catch (e: Exception) {
                 Timber.e(e)
                 _getPetShopsLoading.emit(false)
