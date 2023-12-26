@@ -131,7 +131,7 @@ class LoginPetShopFragment: Fragment() {
         spannable.setSpan(
             object : ClickableSpan() {
                 override fun onClick(view: View) {
-//                    findNavController().navigate(navigate)
+                    findNavController().navigate(LoginPetShopFragmentDirections.actionLoginPetShopFragmentToRegisterPetShopFragment())
                 }
 
                 override fun updateDrawState(ds: TextPaint) {

@@ -184,7 +184,7 @@ class RegisterPetOwnerFragment : Fragment() {
     private fun validateName(name: String): Boolean {
         if (name.isBlank()) {
             binding.editTextLayoutName.isErrorEnabled = true
-            binding.editTextLayoutName.error = "Name cannot be empty"
+            binding.editTextLayoutName.error = getString(R.string.error_name_empty)
             return false
         }
 
@@ -195,11 +195,11 @@ class RegisterPetOwnerFragment : Fragment() {
     private fun validateEmail(email: String): Boolean {
         if (email.isBlank()) {
             binding.editTextLayoutEmail.isErrorEnabled = true
-            binding.editTextLayoutEmail.error = "Email cannot be empty"
+            binding.editTextLayoutEmail.error = getString(R.string.error_email_empty)
             return false
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             binding.editTextLayoutEmail.isErrorEnabled = true
-            binding.editTextLayoutEmail.error = "Email is not valid"
+            binding.editTextLayoutEmail.error = getString(R.string.error_email_not_valid)
             return false
         }
 
@@ -210,11 +210,11 @@ class RegisterPetOwnerFragment : Fragment() {
     private fun validatePhoneNumber(phoneNumber: String): Boolean {
         if (phoneNumber.isBlank()) {
             binding.editTextLayoutPhone.isErrorEnabled = true
-            binding.editTextLayoutPhone.error = "Phone number cannot be empty"
+            binding.editTextLayoutPhone.error = getString(R.string.error_phone_number_empty)
             return false
         } else if (!phoneNumber.isDigitsOnly()) {
             binding.editTextLayoutPhone.isErrorEnabled = true
-            binding.editTextLayoutPhone.error = "Phone number must contains digit only"
+            binding.editTextLayoutPhone.error = getString(R.string.error_phone_number_digits_only)
             return false
         }
 
@@ -225,11 +225,11 @@ class RegisterPetOwnerFragment : Fragment() {
     private fun validatePassword(password: String): Boolean {
         if (password.isBlank()) {
             binding.editTextLayoutPassword.isErrorEnabled = true
-            binding.editTextLayoutPassword.error = "Password cannot be empty"
+            binding.editTextLayoutPassword.error = getString(R.string.error_password_empty)
             return false
         } else if (password.count() !in 8..12) {
             binding.editTextLayoutPassword.isErrorEnabled = true
-            binding.editTextLayoutPassword.error = "Password length must be between 8 and 12"
+            binding.editTextLayoutPassword.error = getString(R.string.error_password_length)
             return false
         }
 
@@ -243,13 +243,11 @@ class RegisterPetOwnerFragment : Fragment() {
     ): Boolean {
         if (passwordConfirmation.isBlank()) {
             binding.editTextLayoutPasswordConfirmation.isErrorEnabled = true
-            binding.editTextLayoutPasswordConfirmation.error =
-                "Password confirmation cannot be empty"
+            binding.editTextLayoutPasswordConfirmation.error = getString(R.string.error_password_empty)
             return false
         } else if (password != passwordConfirmation) {
             binding.editTextLayoutPasswordConfirmation.isErrorEnabled = true
-            binding.editTextLayoutPasswordConfirmation.error =
-                "Password confirmation is not the same"
+            binding.editTextLayoutPasswordConfirmation.error = getString(R.string.error_password_confirmation_invalid)
             return false
         }
 

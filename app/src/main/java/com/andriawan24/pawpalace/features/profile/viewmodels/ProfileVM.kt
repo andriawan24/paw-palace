@@ -31,6 +31,7 @@ class ProfileVM @Inject constructor(private val datastore: PawPalaceDatastore): 
 
             auth.signOut()
             datastore.setCurrentUser(null)
+            datastore.setCurrentPetShop(null)
 
             _isProfileLoading.emit(false)
             _navigateToOnboarding.emit(None)

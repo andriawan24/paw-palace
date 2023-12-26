@@ -93,5 +93,13 @@
         android:id="@+id/loginPetShopFragment"
         android:name="com.andriawan24.pawpalace.features.login.presenters.LoginPetShopFragment"
         android:label="fragment_login_pet_shop"
-        tools:layout="@layout/fragment_login_pet_shop" />
+        tools:layout="@layout/fragment_login_pet_shop" >
+        <action
+            android:id="@+id/action_loginPetShopFragment_to_registerPetShopFragment"
+            app:destination="@id/registerPetShopFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerPetShopFragment"
+        android:name="com.andriawan24.pawpalace.features.register.presenters.RegisterPetShopFragment"
+        android:label="RegisterPetShopFragment" />
 </navigation>

@@ -3,6 +3,7 @@ package com.andriawan24.pawpalace.features.register.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andriawan24.pawpalace.data.local.PawPalaceDatastore
+import com.andriawan24.pawpalace.data.models.PetShopModel
 import com.andriawan24.pawpalace.data.models.UserModel
 import com.andriawan24.pawpalace.utils.None
 import com.google.firebase.Firebase
@@ -42,16 +43,13 @@ class RegisterPetShopVM @Inject constructor(
             try {
                 auth.signInWithEmailAndPassword(email, password).await()
 
-            } catch (e: FirebaseAuthInvalidCredentialsException) {
-                auth.createUserWithEmailAndPassword(email, password).await()
                 auth.currentUser?.let { user ->
-                    // Update User Profile
-                    val updateProfile = userProfileChangeRequest {
-                        displayName = name
-                    }
-                    user.updateProfile(updateProfile).await()
+                    val petShopId = "pet_shop_${user.uid}"
+                    val petShopDocument = db.collection("pet_shops")
+                        .document(petShopId)
+                        .get()
+                        .await()
 
-                    // Store User Profile
                     val userModel = UserModel(
                         user.displayName.orEmpty(),
                         user.email.orEmpty(),
@@ -59,16 +57,79 @@ class RegisterPetShopVM @Inject constructor(
                         phoneNumber
                     )
 
-                    db.collection("users")
-                        .document(user.uid)
-                        .set(userModel)
-                        .await()
+                    val petShop = PetShopModel(
+                        id = petShopId,
+                        userId = user.uid,
+                        description = "",
+                        location = "",
+                        dailyPrice = 0,
+                        slot = 0,
+                        name = name
+                    )
+
+                    if (!petShopDocument.exists()) {
+                        db.collection("pet_shops")
+                            .document(petShopId)
+                            .set(petShop)
+                            .await()
+                    }
 
                     datastore.setCurrentUser(userModel)
+                    datastore.setCurrentPetShop(petShop)
                 }
 
                 _isRegisterLoading.emit(false)
                 _registerSuccess.emit(None)
+            } catch (e: FirebaseAuthInvalidCredentialsException) {
+                try {
+                    auth.createUserWithEmailAndPassword(email, password).await()
+                    auth.currentUser?.let { user ->
+                        // Update User Profile
+                        val updateProfile = userProfileChangeRequest {
+                            displayName = name
+                        }
+                        user.updateProfile(updateProfile).await()
+
+                        // Store User Profile
+                        val userModel = UserModel(
+                            user.displayName.orEmpty(),
+                            user.email.orEmpty(),
+                            user.uid,
+                            phoneNumber
+                        )
+
+                        db.collection("users")
+                            .document(user.uid)
+                            .set(userModel)
+                            .await()
+
+                        val petShopId = "pet_shop_${user.uid}"
+                        val petShop = PetShopModel(
+                            id = petShopId,
+                            userId = user.uid,
+                            description = "",
+                            location = "",
+                            dailyPrice = 0,
+                            slot = 0,
+                            name = name
+                        )
+
+                        db.collection("pet_shops")
+                            .document(petShopId)
+                            .set(petShop)
+                            .await()
+
+                        datastore.setCurrentPetShop(petShop)
+                        datastore.setCurrentUser(userModel)
+                    }
+
+                    _isRegisterLoading.emit(false)
+                    _registerSuccess.emit(None)
+                } catch (e: Exception) {
+                    Timber.e(e)
+                    _isRegisterLoading.emit(false)
+                    _registerError.emit(e.message.orEmpty())
+                }
             } catch (e: Exception) {
                 Timber.e(e)
                 _isRegisterLoading.emit(false)

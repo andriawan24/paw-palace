@@ -3,6 +3,7 @@ package com.andriawan24.pawpalace.features.login.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andriawan24.pawpalace.data.local.PawPalaceDatastore
+import com.andriawan24.pawpalace.data.models.PetShopModel
 import com.andriawan24.pawpalace.data.models.UserModel
 import com.andriawan24.pawpalace.utils.None
 import com.google.firebase.Firebase
@@ -43,11 +44,8 @@ class LoginPetShopVM @Inject constructor(
                 auth.signInWithEmailAndPassword(email, password).await()
 
                 auth.currentUser?.let { user ->
-                    val userRef = db.collection("users")
-                        .document(user.uid)
-
                     val petShopDocuments = db.collection("pet_shops")
-                        .whereEqualTo("userRef", userRef)
+                        .whereEqualTo("userId", user.uid)
                         .get()
                         .await()
 
@@ -67,9 +65,22 @@ class LoginPetShopVM @Inject constructor(
                         name = userDocument.getString("name").orEmpty(),
                         email = userDocument.getString("email").orEmpty(),
                         id = userDocument.getString("id").orEmpty(),
-                        phoneNumber = userDocument.getString("phoneNumber").orEmpty()
+                        phoneNumber = userDocument.getString("phoneNumber").orEmpty(),
+                        location = userDocument.getString("location").orEmpty()
                     )
 
+                    val petShopDocument = petShopDocuments.first()
+                    val petShop = PetShopModel(
+                        id = petShopDocument.getString("id").orEmpty(),
+                        userId = user.uid,
+                        description = petShopDocument.getString("description").orEmpty(),
+                        location = petShopDocument.getString("location").orEmpty(),
+                        dailyPrice = petShopDocument.getLong("dailyPrice")?.toInt() ?: 0,
+                        slot = petShopDocument.getLong("slot")?.toInt() ?: 0,
+                        name = petShopDocument.getString("name").orEmpty()
+                    )
+
+                    datastore.setCurrentPetShop(petShop = petShop)
                     datastore.setCurrentUser(userModel)
                 }
 

@@ -38,4 +38,12 @@
     <string name="sign_in_pet_shop_title">Sign In as a Pet Shop</string>
     <string name="pet_shop_name">Pet Shop Name</string>
     <string name="sign_up_pet_shop_title">Sign Up as a Pet Shop</string>
+    <string name="error_password_empty">Password confirmation cannot be empty</string>
+    <string name="error_password_confirmation_invalid">Password confirmation is not the same</string>
+    <string name="error_password_length">Password length must be between 8 and 12</string>
+    <string name="error_phone_number_empty">Phone number cannot be empty</string>
+    <string name="error_phone_number_digits_only">Phone number must contains digit only</string>
+    <string name="error_name_empty">Name cannot be empty</string>
+    <string name="error_email_empty">Email cannot be empty</string>
+    <string name="error_email_not_valid">Email is not valid</string>
 </resources>
