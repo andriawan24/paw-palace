@@ -9,5 +9,6 @@
     <style name="Theme.PawPalace" parent="Base.Theme.PawPalace">
         <item name="android:colorPrimary">@color/colorPrimary</item>
         <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:colorAccent">@color/colorPrimary</item>
     </style>
 </resources>

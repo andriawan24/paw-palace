@@ -83,7 +83,7 @@ class HomeFragment : Fragment() {
                         )
                     ),
                     title.indexOf(titleToChange),
-                    title.count(),
+                    title.indexOf(titleToChange) + titleToChange.count(),
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
                 binding.textViewTitle.text = spannable
