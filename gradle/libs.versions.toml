@@ -16,6 +16,9 @@ navigation = "2.7.6"
 hiltNavigation = "1.1.0"
 datastore = "1.0.0"
 viewpager2 = "1.0.0"
+googleService = "4.4.0"
+firebaseBom = "32.7.0"
+gson = "2.10.1"
 
 [libraries]
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -34,6 +37,11 @@ navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.
 hilt-navigation = { module = "androidx.hilt:hilt-navigation-fragment", version.ref = "hiltNavigation" }
 datastore-preference = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-auth = { module = "com.google.firebase:firebase-auth" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
@@ -41,3 +49,4 @@ android-kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 navigation-safeArgs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation" }
+google-service = { id = "com.google.gms.google-services", version.ref = "googleService" }

@@ -6,12 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.andriawan24.pawpalace.databinding.FragmentHomeBinding
+import com.andriawan24.pawpalace.features.home.viewmodels.HomeVM
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
+    private val viewModel: HomeVM by viewModels()
     private val binding: FragmentHomeBinding by lazy {
         FragmentHomeBinding.inflate(layoutInflater)
     }
@@ -26,6 +29,10 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // TODO: do something
+        initObserver()
+    }
+
+    private fun initObserver() {
+
     }
 }

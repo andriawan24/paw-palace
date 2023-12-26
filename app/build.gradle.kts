@@ -7,6 +7,8 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.navigation.safeArgs)
+    alias(libs.plugins.google.service)
+    id("kotlin-parcelize")
 }
 
 val versionProps = Properties().apply {
@@ -84,6 +86,15 @@ dependencies {
 
     // Viewpager
     implementation(libs.viewpager2)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.firestore)
+
+    // Serialization and Deserialization
+    implementation(libs.gson)
 
     // Testing
     testImplementation(libs.junit)

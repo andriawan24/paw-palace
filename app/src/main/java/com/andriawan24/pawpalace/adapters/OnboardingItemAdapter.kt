@@ -9,7 +9,7 @@ import com.andriawan24.pawpalace.data.models.OnboardingModel
 import com.andriawan24.pawpalace.databinding.ViewOnboardingItemBinding
 import com.andriawan24.pawpalace.utils.RecyclerDiffUtil
 
-class OnboardingAdapter : RecyclerView.Adapter<OnboardingAdapter.OnboardingItemViewHolder>() {
+class OnboardingItemAdapter : RecyclerView.Adapter<OnboardingItemAdapter.OnboardingItemViewHolder>() {
 
     private var onboardingItems: List<OnboardingModel> = emptyList()
 

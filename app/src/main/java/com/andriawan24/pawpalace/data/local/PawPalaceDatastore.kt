@@ -3,10 +3,13 @@ package com.andriawan24.pawpalace.data.local
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.andriawan24.pawpalace.data.models.UserModel
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = PawPalaceDatastore.DATASTORE_NAME)
@@ -14,22 +17,21 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = Paw
 class PawPalaceDatastore(context: Context) {
 
     private val datastore = context.dataStore
+    private val currentUserPreferences = stringPreferencesKey(USER_PREFERENCE)
 
-    private val firstTimePreferenceKey = booleanPreferencesKey(IS_FIRST_TIME_KEY)
-
-    val isFirstTimeFlow: Flow<Boolean> = datastore.data
-        .map { preferences ->
-            preferences[firstTimePreferenceKey] ?: true
+    fun getCurrentUser(): Flow<UserModel> = datastore.data
+        .map {
+            val userString = it[currentUserPreferences] ?: ""
+            val user = Gson().fromJson(userString, UserModel::class.java)
+            user
         }
 
-    suspend fun setFirstTime(isFirstTime: Boolean) {
-        datastore.edit { preference ->
-            preference[firstTimePreferenceKey] = isFirstTime
-        }
+    suspend fun setCurrentUser(userModel: UserModel?) = datastore.edit {
+        it[currentUserPreferences] = if (userModel != null) Gson().toJson(userModel) else ""
     }
 
     companion object {
         const val DATASTORE_NAME = "PawPalaceDatastore"
-        private const val IS_FIRST_TIME_KEY = "IS_FIRST_TIME_KEY"
+        const val USER_PREFERENCE = "USER_PREFERENCE"
     }
 }

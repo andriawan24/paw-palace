@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "150627506598",
+    "project_id": "paw-palace-20250",
+    "storage_bucket": "paw-palace-20250.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:150627506598:android:d2c5ee23803ded07731767",
+        "android_client_info": {
+          "package_name": "com.andriawan24.pawpalace"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUxNMCDV4McGItSb2WS7yJib-npOhdjgk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

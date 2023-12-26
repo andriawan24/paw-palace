@@ -13,8 +13,6 @@
     <string name="sign_in_pet_shop">Sign In as A Pet Shop</string>
     <string name="sign_in_pet_owner_title">Sign In as a Pet’s Owner</string>
     <string name="do_not_have_account_title">Not have an account yet? Sign Up</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="sign_up_subtitle">It’s nice to see you, fill the blank input below here to sign up.</string>
     <string name="name">Name</string>
     <string name="name_hint">Type your full name</string>
@@ -30,4 +28,14 @@
     <string name="bottom_navigation_menu_chat_title">Chat</string>
     <string name="bottom_navigation_menu_profile_title">Profile</string>
     <string name="bottom_navigation_menu_history_title">History</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="location">Location</string>
+    <string name="search_hint">Enter a keyword</string>
+    <string name="search">Search</string>
+    <string name="pet_shop_image">Pet shop image</string>
+    <string name="star_icon">Star Icon</string>
+    <string name="detail">Detail</string>
+    <string name="sign_in_pet_shop_title">Sign In as a Pet Shop</string>
+    <string name="pet_shop_name">Pet Shop Name</string>
+    <string name="sign_up_pet_shop_title">Sign Up as a Pet Shop</string>
 </resources>

@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_onboardingFragment_to_loginFragment"
             app:destination="@id/loginPetOwnerFragment" />
+        <action
+            android:id="@+id/action_onboardingFragment_to_loginPetShopFragment"
+            app:destination="@id/loginPetShopFragment" />
     </fragment>
 
     <fragment
@@ -57,7 +60,13 @@
         android:id="@+id/profileFragment"
         android:name="com.andriawan24.pawpalace.features.profile.presenters.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_onboardingFragment"
+            app:destination="@id/onboardingFragment"
+            app:popUpTo="@id/main_nav"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <!-- Global Actions for Bottom Navigation -->
     <action
@@ -80,4 +89,9 @@
         app:destination="@id/profileFragment"
         app:popUpTo="@id/main_nav"
         app:popUpToInclusive="true" />
+    <fragment
+        android:id="@+id/loginPetShopFragment"
+        android:name="com.andriawan24.pawpalace.features.login.presenters.LoginPetShopFragment"
+        android:label="fragment_login_pet_shop"
+        tools:layout="@layout/fragment_login_pet_shop" />
 </navigation>

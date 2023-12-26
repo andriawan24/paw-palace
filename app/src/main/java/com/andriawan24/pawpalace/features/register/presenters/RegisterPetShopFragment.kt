@@ -22,18 +22,18 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.andriawan24.pawpalace.R
-import com.andriawan24.pawpalace.databinding.FragmentRegisterPetOwnerBinding
-import com.andriawan24.pawpalace.features.register.viewmodels.RegisterPetOwnerVM
+import com.andriawan24.pawpalace.databinding.FragmentRegisterPetShopBinding
+import com.andriawan24.pawpalace.features.register.viewmodels.RegisterPetShopVM
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class RegisterPetOwnerFragment : Fragment() {
+class RegisterPetShopFragment : Fragment() {
 
-    private val viewModel: RegisterPetOwnerVM by viewModels()
-    private val binding: FragmentRegisterPetOwnerBinding by lazy {
-        FragmentRegisterPetOwnerBinding.inflate(layoutInflater)
+    private val viewModel: RegisterPetShopVM by viewModels()
+    private val binding: FragmentRegisterPetShopBinding by lazy {
+        FragmentRegisterPetShopBinding.inflate(layoutInflater)
     }
 
     override fun onCreateView(
@@ -92,8 +92,8 @@ class RegisterPetOwnerFragment : Fragment() {
     }
 
     private fun initUI() {
-        var title = getString(R.string.sign_up_pet_owner_title)
-        var titleToChange = "Pet’s Owner"
+        var title = getString(R.string.sign_up_pet_shop_title)
+        var titleToChange = "Pet Shop"
         var spannable = SpannableString(title)
         spannable.setSpan(
             ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.colorPrimary)),
@@ -101,7 +101,7 @@ class RegisterPetOwnerFragment : Fragment() {
             title.count(),
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
-        binding.textViewSignUpPetOwnerTitle.text = spannable
+        binding.textViewSignUpPetShopTitle.text = spannable
 
         title = getString(R.string.already_have_account_title)
         titleToChange = "Sign In"

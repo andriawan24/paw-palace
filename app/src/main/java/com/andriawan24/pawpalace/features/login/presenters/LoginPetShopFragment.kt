@@ -1,6 +1,6 @@
 package com.andriawan24.pawpalace.features.login.presenters
 
-import android.graphics.Typeface.BOLD
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -21,18 +21,18 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.andriawan24.pawpalace.R
-import com.andriawan24.pawpalace.databinding.FragmentLoginPetOwnerBinding
-import com.andriawan24.pawpalace.features.login.viewmodels.LoginPetOwnerVM
+import com.andriawan24.pawpalace.databinding.FragmentLoginPetShopBinding
+import com.andriawan24.pawpalace.features.login.viewmodels.LoginPetShopVM
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class LoginPetOwnerFragment : Fragment() {
+class LoginPetShopFragment: Fragment() {
 
-    private val viewModel: LoginPetOwnerVM by viewModels()
-    private val binding: FragmentLoginPetOwnerBinding by lazy {
-        FragmentLoginPetOwnerBinding.inflate(layoutInflater)
+    private val viewModel: LoginPetShopVM by viewModels()
+    private val binding: FragmentLoginPetShopBinding by lazy {
+        FragmentLoginPetShopBinding.inflate(layoutInflater)
     }
 
     override fun onCreateView(
@@ -49,29 +49,6 @@ class LoginPetOwnerFragment : Fragment() {
         initUI()
         initTextListener()
         initClickListener()
-    }
-
-    private fun initObserver() {
-        lifecycleScope.launch {
-            viewModel.isAuthenticationLoading.collectLatest { isLoading ->
-                binding.editTextLayoutEmail.isEnabled = !isLoading
-                binding.editTextLayoutPassword.isEnabled = !isLoading
-                binding.buttonSignIn.isEnabled = !isLoading
-                binding.buttonSignInPetShop.isEnabled = !isLoading
-            }
-        }
-
-        lifecycleScope.launch {
-            viewModel.authenticationError.collectLatest { message ->
-                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        lifecycleScope.launch {
-            viewModel.authenticationSuccess.collectLatest {
-                findNavController().navigate(LoginPetOwnerFragmentDirections.actionLoginPetOwnerFragmentToHomeFragment())
-            }
-        }
     }
 
     private fun initClickListener() {
@@ -131,8 +108,8 @@ class LoginPetOwnerFragment : Fragment() {
     }
 
     private fun initUI() {
-        var title = getString(R.string.sign_in_pet_owner_title)
-        var titleToChange = "Pet’s Owner"
+        var title = getString(R.string.sign_in_pet_shop_title)
+        var titleToChange = "Pet Shop"
         var spannable = SpannableString(title)
         spannable.setSpan(
             ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.colorPrimary)),
@@ -140,7 +117,7 @@ class LoginPetOwnerFragment : Fragment() {
             title.count(),
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
-        binding.textViewSignInPetOwnerTitle.text = spannable
+        binding.textViewSignInPetShopTitle.text = spannable
 
         title = getString(R.string.do_not_have_account_title)
         titleToChange = "Sign Up"
@@ -154,7 +131,7 @@ class LoginPetOwnerFragment : Fragment() {
         spannable.setSpan(
             object : ClickableSpan() {
                 override fun onClick(view: View) {
-                    findNavController().navigate(LoginPetOwnerFragmentDirections.actionLoginPetOwnerFragmentToRegisterPetOwnerFragment())
+//                    findNavController().navigate(navigate)
                 }
 
                 override fun updateDrawState(ds: TextPaint) {
@@ -166,12 +143,32 @@ class LoginPetOwnerFragment : Fragment() {
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         spannable.setSpan(
-            StyleSpan(BOLD),
+            StyleSpan(Typeface.BOLD),
             title.indexOf(titleToChange),
             title.count(),
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         binding.textViewRegister.text = spannable
         binding.textViewRegister.movementMethod = LinkMovementMethod()
+    }
+
+    private fun initObserver() {
+        lifecycleScope.launch {
+            viewModel.authenticationError.collectLatest {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.isAuthenticationLoading.collectLatest {
+                binding.buttonSignIn.isEnabled = !it
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.authenticationSuccess.collectLatest {
+                findNavController().navigate(LoginPetShopFragmentDirections.actionGlobalHome())
+            }
+        }
     }
 }
