@@ -43,6 +43,9 @@
         <action
             android:id="@+id/action_homeFragment_to_detailPetShopFragment"
             app:destination="@id/detailPetShopFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_chatDetailFragment"
+            app:destination="@id/chatDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/chatFragment"

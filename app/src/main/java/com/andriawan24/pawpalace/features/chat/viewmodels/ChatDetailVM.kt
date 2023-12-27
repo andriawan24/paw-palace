@@ -10,6 +10,7 @@ import com.andriawan24.pawpalace.utils.None
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.Filter
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.snapshots
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,10 +22,12 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import timber.log.Timber
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -39,7 +42,7 @@ class ChatDetailVM @Inject constructor(private val datastore: PawPalaceDatastore
     private val _getChatError = MutableSharedFlow<String>()
     val getChatError = _getChatError.asSharedFlow()
 
-    private val _chats = MutableStateFlow<List<ChatModel>>(emptyList())
+    private val _chats = MutableStateFlow<Map<String, List<ChatModel>>>(emptyMap())
     val chats = _chats.asStateFlow()
 
     private val _navigateToOnboarding = MutableSharedFlow<None>()
@@ -72,7 +75,7 @@ class ChatDetailVM @Inject constructor(private val datastore: PawPalaceDatastore
                         Filter.equalTo("petShopId", petShopId)
                     )
                 )
-                .orderBy("createdAt")
+                .orderBy("createdAt", Query.Direction.DESCENDING)
                 .snapshots()
                 .catch {
                     Timber.e(it)
@@ -98,7 +101,8 @@ class ChatDetailVM @Inject constructor(private val datastore: PawPalaceDatastore
                                 description = receiver?.get("description").toString(),
                                 userId = receiver?.get("userId").toString(),
                                 location = receiver?.get("location").toString(),
-                                dailyPrice = receiver?.get("dailyPrice").toString().toIntOrNull() ?: 0,
+                                dailyPrice = receiver?.get("dailyPrice").toString().toIntOrNull()
+                                    ?: 0,
                                 slot = receiver?.get("slot").toString().toIntOrNull() ?: 0,
                             ),
                             text = document.getString("text").orEmpty(),
@@ -111,13 +115,42 @@ class ChatDetailVM @Inject constructor(private val datastore: PawPalaceDatastore
                     }
                 }
                 .collectLatest {
+                    val chatByDate = it.groupBy { chat ->
+                        val simpleDateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+                        val date = simpleDateFormat.format(chat.createdAt)
+                        date
+                    }
+                    Timber.d("Chat by date $chatByDate")
                     _getChatLoading.emit(false)
-                    _chats.emit(it)
+                    _chats.emit(chatByDate)
                 }
         }
     }
 
-    fun sendMessage(text: String) {
+    fun sendMessage(text: String, petShop: PetShopModel) {
+        viewModelScope.launch {
+            currentUser?.let {
+                val chatDoc = db.collection("chats")
+                    .document()
 
+                val chat = ChatModel(
+                    id = chatDoc.id,
+                    sender = it,
+                    petShop = petShop,
+                    senderId = it.id,
+                    petShopId = petShop.id,
+                    text = text
+                )
+
+                try {
+                    chatDoc
+                        .set(chat)
+                        .await()
+                } catch (e: Exception) {
+                    Timber.e(e)
+                    _getChatError.emit(e.localizedMessage.orEmpty())
+                }
+            }
+        }
     }
 }

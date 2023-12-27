@@ -123,7 +123,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeVM>(), PetShopItemAda
         )
     }
 
-    override fun onChatClicked(id: String) {
-        // Do something
+    override fun onChatClicked(petShop: PetShopModel) {
+        findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToChatDetailFragment(petShop))
     }
 }

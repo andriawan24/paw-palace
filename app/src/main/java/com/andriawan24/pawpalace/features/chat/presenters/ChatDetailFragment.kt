@@ -31,8 +31,12 @@ class ChatDetailFragment : BaseFragment<FragmentChatDetailBinding, ChatDetailVM>
         binding.imageViewBackButton.setOnClickListener {
             findNavController().navigateUp()
         }
+        binding.buttonSend.setOnClickListener {
+            viewModel.sendMessage(binding.textInputMessage.text.toString(), petShop = args.petShop)
+            binding.textInputMessage.setText("")
+        }
         binding.recyclerViewChat.adapter = adapter
-        binding.recyclerViewChat.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, true)
+        binding.recyclerViewChat.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         viewModel.initData(args.petShop.id)
     }
 
@@ -43,7 +47,17 @@ class ChatDetailFragment : BaseFragment<FragmentChatDetailBinding, ChatDetailVM>
     override fun onInitObserver() {
         lifecycleScope.launch {
             viewModel.chats.collectLatest {
-                adapter.setData(it)
+                val anyList =  mutableListOf<Any>()
+
+                it.keys.forEach { date ->
+                    anyList.add(date)
+                    it[date]?.reversed()?.forEach { chat ->
+                        anyList.add(chat)
+                    }
+                }
+
+                adapter.setData(anyList)
+                binding.recyclerViewChat.scrollToPosition(anyList.lastIndex)
             }
         }
 

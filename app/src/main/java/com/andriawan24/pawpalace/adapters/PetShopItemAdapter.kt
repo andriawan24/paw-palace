@@ -27,7 +27,7 @@ class PetShopItemAdapter(
                 listener.onDetailClicked(petShop.id)
             }
             binding.buttonChat.setOnClickListener {
-                listener.onChatClicked(petShop.id)
+                listener.onChatClicked(petShop)
             }
         }
     }
@@ -54,6 +54,6 @@ class PetShopItemAdapter(
 
     interface OnClickListener {
         fun onDetailClicked(id: String)
-        fun onChatClicked(id: String)
+        fun onChatClicked(petShop: PetShopModel)
     }
 }
