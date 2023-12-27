@@ -46,4 +46,14 @@
     <string name="error_name_empty">Name cannot be empty</string>
     <string name="error_email_empty">Email cannot be empty</string>
     <string name="error_email_not_valid">Email is not valid</string>
+    <string name="per_day">/day</string>
+    <string name="description">Description</string>
+    <string name="description_example">Petshop Hewan Peliharaan adalah tempat ternama bagi pemilik hewan kesayangan yang menginginkan layanan penitipan terbaik. Petshop kami tidak hanya sekedar tempat penitipan, tetapi rumah kedua bagi sahabat berbulu Anda.
+ Dengan pengalaman bertahun-tahun dalam merawat dan memahami hewan, kami di "Sahabat Peliharaan" hadir untuk memberikan perhatian dan kasih sayang yang hewan kesayangan Anda perlukan selama Anda berada jauh dari mereka. Kami tahu bahwa tiap hewan memiliki kepribadian dan kebutuhan yang unik, oleh karena itu, kami menyediakan layanan personalisasi yang bisa disesuaikan dengan preferensi hewan peliharaan Anda.
+ Keamanan dan kesehatan sahabat berbulu Anda adalah prioritas kami. Oleh karena itu, petshop kami dilengkapi dengan fasilitas yang terjaga kebersihannya, ruang bermain yang luas dan aman, serta kamar tidur yang nyaman dengan pemanas atau penyejuk udara tergantung pada kebutuhan hewan Anda. Tim kami yang profesional juga selalu siap 24/7 untuk menjamin bahwa tiap hewan yang dititipkan mendapatkan perawatan yang mereka perlukan.
+Program penitipan kami meliputi sesi permainan, jalan-jalan rutin, dan sesi pelukan yang akan memastikan hewan kesayangan Anda terhibur, senang, dan tentunya sehat.
+
+Di "Sahabat Peliharaan" Petshop, kami merevolusi cara penitipan hewan dengan menyediakan layanan yang sepenuh hati. Kunjungi kami di Jalan Buah Batu, dan rasakan ketenangan pikiran Anda saat mengetahui sahabat kecil Anda ditangani dengan perawatan terbaik.</string>
+    <string name="showing_your_slot">Showing Your Slot</string>
+    <string name="booking">Booking</string>
 </resources>

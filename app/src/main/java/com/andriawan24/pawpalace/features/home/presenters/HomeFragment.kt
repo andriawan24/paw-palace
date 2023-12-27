@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.andriawan24.pawpalace.R
 import com.andriawan24.pawpalace.adapters.PetShopItemAdapter
@@ -28,9 +29,9 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), PetShopItemAdapter.OnClickListener {
 
-    private val adapter = PetShopItemAdapter()
+    private val adapter = PetShopItemAdapter(this)
     private val viewModel: HomeVM by viewModels()
     private val binding: FragmentHomeBinding by lazy {
         FragmentHomeBinding.inflate(layoutInflater)
@@ -112,7 +113,7 @@ class HomeFragment : Fragment() {
         binding.textViewTitle.text = spannable
 
         binding.textViewLocation.text = petShop.location.ifEmpty { "Location not set" }
-        binding.textViewPetShopCount.text = "Showing Your Slot"
+        binding.textViewPetShopCount.text = getString(R.string.showing_your_slot)
         binding.textInputLayoutSearch.visibility = GONE
         binding.buttonSearch.visibility = GONE
     }
@@ -134,5 +135,15 @@ class HomeFragment : Fragment() {
         )
         binding.textViewTitle.text = spannable
         binding.textViewLocation.text = location.ifEmpty { "Location not set" }
+    }
+
+    override fun onDetailClicked(id: String) {
+        findNavController().navigate(
+            HomeFragmentDirections.actionHomeFragmentToDetailPetShopFragment(id)
+        )
+    }
+
+    override fun onChatClicked(id: String) {
+        // Do something
     }
 }

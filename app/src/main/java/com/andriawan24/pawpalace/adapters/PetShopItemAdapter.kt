@@ -8,24 +8,33 @@ import com.andriawan24.pawpalace.data.models.PetShopModel
 import com.andriawan24.pawpalace.databinding.ViewPetShopItemBinding
 import com.andriawan24.pawpalace.utils.RecyclerDiffUtil
 
-class PetShopItemAdapter: RecyclerView.Adapter<PetShopItemAdapter.PetShopItemViewHolder>() {
+class PetShopItemAdapter(
+    private val listener: OnClickListener
+) : RecyclerView.Adapter<PetShopItemAdapter.PetShopItemViewHolder>() {
 
     private var petShops = emptyList<PetShopModel>()
 
     class PetShopItemViewHolder(
-        private val binding: ViewPetShopItemBinding
-    ): RecyclerView.ViewHolder(binding.root) {
+        private val binding: ViewPetShopItemBinding,
+        private val listener: OnClickListener
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(petShop: PetShopModel) {
             binding.textViewName.text = petShop.name
             binding.textViewRating.text = "${petShop.rating}"
             binding.textViewSlotPrice.text = "${petShop.slot} Slot • ${petShop.dailyPrice}/hari"
+            binding.buttonDetail.setOnClickListener {
+                listener.onDetailClicked(petShop.id)
+            }
+            binding.buttonChat.setOnClickListener {
+                listener.onChatClicked(petShop.id)
+            }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PetShopItemViewHolder {
         val binding = ViewPetShopItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return PetShopItemViewHolder(binding)
+        return PetShopItemViewHolder(binding, listener)
     }
 
     override fun onBindViewHolder(holder: PetShopItemViewHolder, position: Int) {
@@ -41,5 +50,10 @@ class PetShopItemAdapter: RecyclerView.Adapter<PetShopItemAdapter.PetShopItemVie
         val result = DiffUtil.calculateDiff(diffUtil)
         petShops = newItems
         result.dispatchUpdatesTo(this)
+    }
+
+    interface OnClickListener {
+        fun onDetailClicked(id: String)
+        fun onChatClicked(id: String)
     }
 }
