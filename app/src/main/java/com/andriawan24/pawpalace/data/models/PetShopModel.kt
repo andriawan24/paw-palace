@@ -1,5 +1,9 @@
 package com.andriawan24.pawpalace.data.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class PetShopModel(
     val id: String,
     val userId: String,
@@ -9,4 +13,4 @@ data class PetShopModel(
     val slot: Int,
     val name: String,
     val rating: Double = 0.0
-)
+) : Parcelable

@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.andriawan24.pawpalace.R
 import com.andriawan24.pawpalace.databinding.FragmentProfileBinding
 import com.andriawan24.pawpalace.features.profile.viewmodels.ProfileVM
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,7 +52,7 @@ class ProfileFragment : Fragment() {
 
         lifecycleScope.launch {
             viewModel.navigateToOnboarding.collectLatest {
-                findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToOnboardingFragment())
+                findNavController().navigate(R.id.action_global_onboarding)
             }
         }
     }

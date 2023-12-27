@@ -30,7 +30,7 @@ class DetailPetShopVM @Inject constructor(): ViewModel() {
     private val _getDetailSuccess = MutableSharedFlow<PetShopModel>()
     val getDetailSuccess = _getDetailSuccess.asSharedFlow()
 
-    private val _goToMessageRoom = MutableSharedFlow<UserModel>()
+    private val _goToMessageRoom = MutableSharedFlow<PetShopModel>()
     val goToMessageRoom = _goToMessageRoom.asSharedFlow()
 
     private val _petShopState = MutableStateFlow<PetShopModel?>(null)
@@ -68,20 +68,8 @@ class DetailPetShopVM @Inject constructor(): ViewModel() {
 
     fun onMessageClicked() {
         viewModelScope.launch {
-            val userDocument = db.collection("users")
-                .document(_petShopState.value?.userId.orEmpty())
-                .get()
-                .await()
-
-            if (userDocument.exists()) {
-                val user = UserModel(
-                    id = userDocument.id,
-                    name = userDocument.getString("name").orEmpty(),
-                    email = userDocument.getString("email").orEmpty(),
-                    phoneNumber = userDocument.getString("phoneNumber").orEmpty(),
-                    location = userDocument.getString("location").orEmpty()
-                )
-                _goToMessageRoom.emit(user)
+            _petShopState.value?.let { petShopModel ->
+                _goToMessageRoom.emit(petShopModel)
             }
         }
     }
