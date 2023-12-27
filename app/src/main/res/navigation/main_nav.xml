@@ -17,7 +17,6 @@
             android:id="@+id/action_onboardingFragment_to_loginPetShopFragment"
             app:destination="@id/loginPetShopFragment" />
     </fragment>
-
     <fragment
         android:id="@+id/loginPetOwnerFragment"
         android:name="com.andriawan24.pawpalace.features.login.presenters.LoginPetOwnerFragment"
@@ -32,12 +31,10 @@
             app:popUpTo="@id/loginPetOwnerFragment"
             app:popUpToInclusive="true" />
     </fragment>
-
     <fragment
         android:id="@+id/registerPetOwnerFragment"
         android:name="com.andriawan24.pawpalace.features.register.presenters.RegisterPetOwnerFragment"
         android:label="RegisterPetOwnerFragment" />
-
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.andriawan24.pawpalace.features.home.presenters.HomeFragment"
@@ -47,19 +44,16 @@
             android:id="@+id/action_homeFragment_to_detailPetShopFragment"
             app:destination="@id/detailPetShopFragment" />
     </fragment>
-
     <fragment
         android:id="@+id/chatFragment"
-        android:name="com.andriawan24.pawpalace.features.chat.presenters.ChatFragment"
+        android:name="com.andriawan24.pawpalace.features.chat.presenters.ChatListFragment"
         android:label="fragment_chat"
-        tools:layout="@layout/fragment_chat" />
-
+        tools:layout="@layout/fragment_chat_list" />
     <fragment
         android:id="@+id/historyFragment"
         android:name="com.andriawan24.pawpalace.features.history.presenters.HistoryFragment"
         android:label="fragment_history"
         tools:layout="@layout/fragment_history" />
-
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.andriawan24.pawpalace.features.profile.presenters.ProfileFragment"
@@ -70,6 +64,39 @@
             app:destination="@id/onboardingFragment"
             app:popUpTo="@id/main_nav"
             app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginPetShopFragment"
+        android:name="com.andriawan24.pawpalace.features.login.presenters.LoginPetShopFragment"
+        android:label="fragment_login_pet_shop"
+        tools:layout="@layout/fragment_login_pet_shop" >
+        <action
+            android:id="@+id/action_loginPetShopFragment_to_registerPetShopFragment"
+            app:destination="@id/registerPetShopFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerPetShopFragment"
+        android:name="com.andriawan24.pawpalace.features.register.presenters.RegisterPetShopFragment"
+        android:label="RegisterPetShopFragment" >
+        <action
+            android:id="@+id/action_registerPetShopFragment_to_completeRegisterPetShopFragment"
+            app:destination="@id/completeRegisterPetShopFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailPetShopFragment"
+        android:name="com.andriawan24.pawpalace.features.detail.presenters.DetailPetShopFragment"
+        android:label="DetailPetShopFragment" >
+        <argument
+            android:name="petShopId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/completeRegisterPetShopFragment"
+        android:name="com.andriawan24.pawpalace.features.register.presenters.CompleteRegisterPetShopFragment"
+        android:label="CompleteRegisterPetShopFragment">
+        <argument
+            android:name="petShopId"
+            app:argType="string" />
     </fragment>
 
     <!-- Global Actions for Bottom Navigation -->
@@ -93,25 +120,4 @@
         app:destination="@id/profileFragment"
         app:popUpTo="@id/main_nav"
         app:popUpToInclusive="true" />
-    <fragment
-        android:id="@+id/loginPetShopFragment"
-        android:name="com.andriawan24.pawpalace.features.login.presenters.LoginPetShopFragment"
-        android:label="fragment_login_pet_shop"
-        tools:layout="@layout/fragment_login_pet_shop" >
-        <action
-            android:id="@+id/action_loginPetShopFragment_to_registerPetShopFragment"
-            app:destination="@id/registerPetShopFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/registerPetShopFragment"
-        android:name="com.andriawan24.pawpalace.features.register.presenters.RegisterPetShopFragment"
-        android:label="RegisterPetShopFragment" />
-    <fragment
-        android:id="@+id/detailPetShopFragment"
-        android:name="com.andriawan24.pawpalace.features.detail.presenters.DetailPetShopFragment"
-        android:label="DetailPetShopFragment" >
-        <argument
-            android:name="petShopId"
-            app:argType="string" />
-    </fragment>
 </navigation>

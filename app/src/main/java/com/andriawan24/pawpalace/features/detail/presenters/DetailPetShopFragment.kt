@@ -4,49 +4,63 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.andriawan24.pawpalace.base.BaseFragment
 import com.andriawan24.pawpalace.databinding.FragmentDetailPetShopBinding
 import com.andriawan24.pawpalace.features.detail.viewmodels.DetailPetShopVM
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class DetailPetShopFragment: Fragment() {
+class DetailPetShopFragment: BaseFragment<FragmentDetailPetShopBinding, DetailPetShopVM>() {
 
-    private val viewModel: DetailPetShopVM by viewModels()
     private val args: DetailPetShopFragmentArgs by navArgs()
-    private val binding: FragmentDetailPetShopBinding by lazy {
+    override val viewModel: DetailPetShopVM by viewModels()
+    override val binding: FragmentDetailPetShopBinding by lazy {
         FragmentDetailPetShopBinding.inflate(layoutInflater)
     }
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return binding.root
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initObserver()
-        initUI()
+    override fun onInitViews() {
         initClickListener()
         viewModel.initData(args.petShopId)
+    }
+
+    override fun onInitObserver() {
+        lifecycleScope.launch {
+            viewModel.getDetailSuccess.collectLatest {
+                binding.textViewSlot.text = "${it.slot} Slot(s) Available"
+                binding.textViewName.text = it.name
+                binding.textViewPrice.text = it.dailyPrice.toString()
+                binding.textViewAddress.text = it.location.ifEmpty { "Location not set" }
+                binding.textViewRating.text = it.rating.toString()
+                binding.textViewDescription.text = it.description
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.getDetailError.collectLatest {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        lifecycleScope.launch {
+
+        }
     }
 
     private fun initClickListener() {
         binding.buttonBack.setOnClickListener {
             findNavController().navigateUp()
         }
-    }
 
-    private fun initObserver() {
-
-    }
-
-    private fun initUI() {
-
+        binding.buttonChat.setOnClickListener {
+            viewModel.onMessageClicked()
+        }
     }
 }

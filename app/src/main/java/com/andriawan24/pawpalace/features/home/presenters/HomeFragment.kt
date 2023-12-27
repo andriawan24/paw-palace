@@ -1,24 +1,19 @@
 package com.andriawan24.pawpalace.features.home.presenters
 
 
-import android.annotation.SuppressLint
-import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.view.LayoutInflater
-import android.view.View
 import android.view.View.GONE
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.andriawan24.pawpalace.R
 import com.andriawan24.pawpalace.adapters.PetShopItemAdapter
+import com.andriawan24.pawpalace.base.BaseFragment
 import com.andriawan24.pawpalace.data.models.PetShopModel
 import com.andriawan24.pawpalace.databinding.FragmentHomeBinding
 import com.andriawan24.pawpalace.features.home.viewmodels.HomeVM
@@ -29,39 +24,24 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(), PetShopItemAdapter.OnClickListener {
+class HomeFragment : BaseFragment<FragmentHomeBinding, HomeVM>(), PetShopItemAdapter.OnClickListener {
 
     private val adapter = PetShopItemAdapter(this)
-    private val viewModel: HomeVM by viewModels()
-    private val binding: FragmentHomeBinding by lazy {
+    override val viewModel: HomeVM by viewModels()
+    override val binding: FragmentHomeBinding by lazy {
         FragmentHomeBinding.inflate(layoutInflater)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initUI()
-        initObserver()
-        viewModel.initData()
-    }
-
-    private fun initUI() {
+    override fun onInitViews() {
         binding.recyclerViewPetShop.adapter = adapter
         binding.recyclerViewPetShop.apply {
             layoutManager = GridLayoutManager(requireContext(), 2)
             addItemDecoration(GridSpacingItemDecoration(2, 20))
         }
+        viewModel.initData()
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun initObserver() {
+    override fun onInitObserver() {
         lifecycleScope.launch {
             viewModel.setPetShopMode.collectLatest {
                 setupPetShopMode(petShop = it)

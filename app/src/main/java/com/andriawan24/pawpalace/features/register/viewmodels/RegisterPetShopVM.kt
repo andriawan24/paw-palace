@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.andriawan24.pawpalace.data.local.PawPalaceDatastore
 import com.andriawan24.pawpalace.data.models.PetShopModel
 import com.andriawan24.pawpalace.data.models.UserModel
-import com.andriawan24.pawpalace.utils.None
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.auth
@@ -35,7 +34,7 @@ class RegisterPetShopVM @Inject constructor(
     private val _registerError = MutableSharedFlow<String>()
     val registerError = _registerError.asSharedFlow()
 
-    private val _registerSuccess = MutableSharedFlow<None>()
+    private val _registerSuccess = MutableSharedFlow<String>()
     val registerSuccess = _registerSuccess.asSharedFlow()
 
     fun register(name: String, phoneNumber: String, email: String, password: String) {
@@ -76,10 +75,10 @@ class RegisterPetShopVM @Inject constructor(
 
                     datastore.setCurrentUser(userModel)
                     datastore.setCurrentPetShop(petShop)
-                }
 
-                _isRegisterLoading.emit(false)
-                _registerSuccess.emit(None)
+                    _isRegisterLoading.emit(false)
+                    _registerSuccess.emit(petShopId)
+                }
             } catch (e: FirebaseAuthInvalidCredentialsException) {
                 try {
                     auth.createUserWithEmailAndPassword(email, password).await()
@@ -121,10 +120,10 @@ class RegisterPetShopVM @Inject constructor(
 
                         datastore.setCurrentPetShop(petShop)
                         datastore.setCurrentUser(userModel)
-                    }
 
-                    _isRegisterLoading.emit(false)
-                    _registerSuccess.emit(None)
+                        _isRegisterLoading.emit(false)
+                        _registerSuccess.emit(petShopId)
+                    }
                 } catch (e: Exception) {
                     Timber.e(e)
                     _isRegisterLoading.emit(false)

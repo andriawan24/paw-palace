@@ -67,7 +67,10 @@ class RegisterPetShopFragment : Fragment() {
 
         lifecycleScope.launch {
             viewModel.registerSuccess.collectLatest {
-                findNavController().navigate(RegisterPetOwnerFragmentDirections.actionGlobalHome())
+                findNavController().navigate(
+                    RegisterPetShopFragmentDirections
+                        .actionRegisterPetShopFragmentToCompleteRegisterPetShopFragment(it)
+                )
             }
         }
     }

@@ -235,7 +235,7 @@
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
-                app:icon="@drawable/ic_add"
+                app:icon="@drawable/ic_check"
                 app:iconGravity="textStart"
                 android:text="@string/booking"
                 android:layout_marginStart="16dp"
