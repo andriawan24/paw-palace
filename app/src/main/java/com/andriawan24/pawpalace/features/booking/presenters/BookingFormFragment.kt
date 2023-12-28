@@ -31,6 +31,7 @@ class BookingFormFragment: BaseFragment<FragmentBookingFormBinding, BookingFormV
         binding.editTextLayoutStartDate.setEndIconOnClickListener {
             openStartDateCalendar(viewModel.startDateState.value)
         }
+
         binding.editTextLayoutEndDate.setEndIconOnClickListener {
             openEndDateCalendar(viewModel.startDateState.value)
         }
@@ -66,9 +67,48 @@ class BookingFormFragment: BaseFragment<FragmentBookingFormBinding, BookingFormV
         binding.buttonCancel.setOnClickListener {
             findNavController().navigateUp()
         }
+
         binding.buttonSave.setOnClickListener {
-            
+            val startDate = viewModel.startDateState.value
+            val endDate = viewModel.endDateState.value
+            val description = binding.editTextDescription.text.toString()
+
+            if (validateInput(startDate, endDate, description)) {
+
+            }
         }
+    }
+
+    private fun validateInput(startDate: Date, endDate: Date, description: String): Boolean {
+        var isValid = true
+
+        if (validateStartEndDate(startDate, endDate)) {
+            isValid = false
+        }
+
+        return isValid
+    }
+
+    private fun validateStartEndDate(startDate: Date, endDate: Date): Boolean {
+        if (startDate.time > endDate.time) {
+            binding.editTextLayoutDescription.isErrorEnabled = true
+            binding.editTextLayoutDescription.error = "Description cannot be empty"
+            return false
+        }
+
+        binding.editTextLayoutEndDate.error = null
+        return true
+    }
+
+    private fun validateDescription(description: String): Boolean {
+        if (description.isBlank()) {
+            binding.editTextLayoutDescription.isErrorEnabled = true
+            binding.editTextLayoutDescription.error = "Description cannot be empty"
+            return false
+        }
+
+        binding.editTextLayoutEndDate.error = null
+        return true
     }
 
     override fun onInitObserver() {
