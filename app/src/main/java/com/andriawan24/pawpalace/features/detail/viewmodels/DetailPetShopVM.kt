@@ -34,6 +34,7 @@ class DetailPetShopVM @Inject constructor(): ViewModel() {
     val goToMessageRoom = _goToMessageRoom.asSharedFlow()
 
     private val _petShopState = MutableStateFlow<PetShopModel?>(null)
+    val petShopState = _petShopState.asStateFlow()
 
     fun initData(petShopId: String) {
         viewModelScope.launch {

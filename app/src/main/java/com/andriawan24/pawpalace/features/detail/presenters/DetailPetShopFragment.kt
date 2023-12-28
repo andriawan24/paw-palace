@@ -65,7 +65,12 @@ class DetailPetShopFragment : BaseFragment<FragmentDetailPetShopBinding, DetailP
         }
 
         binding.buttonBooking.setOnClickListener {
-            findNavController().navigate(DetailPetShopFragmentDirections.actionDetailPetShopFragmentToBookingFormFragment())
+            viewModel.petShopState.value?.let {
+                findNavController().navigate(
+                    DetailPetShopFragmentDirections
+                        .actionDetailPetShopFragmentToBookingFormFragment(it)
+                )
+            }
         }
     }
 }

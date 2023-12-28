@@ -1,8 +1,12 @@
 package com.andriawan24.pawpalace.features.booking.presenters
 
+import android.widget.Toast
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.andriawan24.pawpalace.R
 import com.andriawan24.pawpalace.base.BaseFragment
 import com.andriawan24.pawpalace.databinding.FragmentBookingFormBinding
 import com.andriawan24.pawpalace.features.booking.viewmodels.BookingFormVM
@@ -17,6 +21,7 @@ import java.util.Locale
 @AndroidEntryPoint
 class BookingFormFragment: BaseFragment<FragmentBookingFormBinding, BookingFormVM>() {
 
+    private val args: BookingFormFragmentArgs by navArgs()
     override val viewModel: BookingFormVM by viewModels()
     override val binding: FragmentBookingFormBinding by lazy {
         FragmentBookingFormBinding.inflate(layoutInflater)
@@ -25,6 +30,11 @@ class BookingFormFragment: BaseFragment<FragmentBookingFormBinding, BookingFormV
     override fun onInitViews() {
         initClickListener()
         initTextInputIconListener()
+        initTextListener()
+    }
+
+    private fun initTextListener() {
+        binding.editTextDescription.doAfterTextChanged { validateDescription(it.toString()) }
     }
 
     private fun initTextInputIconListener() {
@@ -44,6 +54,7 @@ class BookingFormFragment: BaseFragment<FragmentBookingFormBinding, BookingFormV
             .build()
 
         datePicker.addOnPositiveButtonClickListener {
+            validateStartEndDate(viewModel.startDateState.value, Date(it))
             viewModel.setEndDate(it)
         }
 
@@ -74,7 +85,12 @@ class BookingFormFragment: BaseFragment<FragmentBookingFormBinding, BookingFormV
             val description = binding.editTextDescription.text.toString()
 
             if (validateInput(startDate, endDate, description)) {
-
+                viewModel.saveBooking(
+                    args.petShop,
+                    startDate,
+                    endDate,
+                    description
+                )
             }
         }
     }
@@ -82,7 +98,11 @@ class BookingFormFragment: BaseFragment<FragmentBookingFormBinding, BookingFormV
     private fun validateInput(startDate: Date, endDate: Date, description: String): Boolean {
         var isValid = true
 
-        if (validateStartEndDate(startDate, endDate)) {
+        if (!validateStartEndDate(startDate, endDate)) {
+            isValid = false
+        }
+
+        if (!validateDescription(description)) {
             isValid = false
         }
 
@@ -91,8 +111,8 @@ class BookingFormFragment: BaseFragment<FragmentBookingFormBinding, BookingFormV
 
     private fun validateStartEndDate(startDate: Date, endDate: Date): Boolean {
         if (startDate.time > endDate.time) {
-            binding.editTextLayoutDescription.isErrorEnabled = true
-            binding.editTextLayoutDescription.error = "Description cannot be empty"
+            binding.editTextLayoutEndDate.isErrorEnabled = true
+            binding.editTextLayoutEndDate.error = "End date cannot less than start date"
             return false
         }
 
@@ -107,7 +127,7 @@ class BookingFormFragment: BaseFragment<FragmentBookingFormBinding, BookingFormV
             return false
         }
 
-        binding.editTextLayoutEndDate.error = null
+        binding.editTextLayoutDescription.error = null
         return true
     }
 
@@ -123,6 +143,32 @@ class BookingFormFragment: BaseFragment<FragmentBookingFormBinding, BookingFormV
             viewModel.endDateState.collectLatest {
                 val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                 binding.editTextEndDate.setText(formatter.format(it))
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.isBookingLoading.collectLatest {
+                binding.buttonSave.isEnabled = !it
+                binding.buttonCancel.isEnabled = !it
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.isBookingError.collectLatest {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.isBookingSuccess.collectLatest {
+                Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.action_global_history)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.navigateToOnboarding.collectLatest {
+                findNavController().navigate(R.id.action_global_onboarding)
             }
         }
     }

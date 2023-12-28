@@ -143,5 +143,8 @@
     <fragment
         android:id="@+id/bookingFormFragment"
         android:name="com.andriawan24.pawpalace.features.booking.presenters.BookingFormFragment"
-        android:label="BookingFormFragment" />
+        android:label="BookingFormFragment" >
+        <argument android:name="petShop"
+            app:argType="com.andriawan24.pawpalace.data.models.PetShopModel" />
+    </fragment>
 </navigation>
