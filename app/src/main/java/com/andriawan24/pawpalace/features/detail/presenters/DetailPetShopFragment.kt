@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class DetailPetShopFragment: BaseFragment<FragmentDetailPetShopBinding, DetailPetShopVM>() {
+class DetailPetShopFragment : BaseFragment<FragmentDetailPetShopBinding, DetailPetShopVM>() {
 
     private val args: DetailPetShopFragmentArgs by navArgs()
     override val viewModel: DetailPetShopVM by viewModels()
@@ -46,9 +46,11 @@ class DetailPetShopFragment: BaseFragment<FragmentDetailPetShopBinding, DetailPe
 
         lifecycleScope.launch {
             viewModel.goToMessageRoom.collectLatest {
-                findNavController().navigate(DetailPetShopFragmentDirections.actionDetailPetShopFragmentToChatDetailFragment(
-                    petShop = it
-                ))
+                findNavController().navigate(
+                    DetailPetShopFragmentDirections.actionDetailPetShopFragmentToChatDetailFragment(
+                        petShop = it
+                    )
+                )
             }
         }
     }
@@ -60,6 +62,10 @@ class DetailPetShopFragment: BaseFragment<FragmentDetailPetShopBinding, DetailPe
 
         binding.buttonChat.setOnClickListener {
             viewModel.onMessageClicked()
+        }
+
+        binding.buttonBooking.setOnClickListener {
+            findNavController().navigate(DetailPetShopFragmentDirections.actionDetailPetShopFragmentToBookingFormFragment())
         }
     }
 }

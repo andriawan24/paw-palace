@@ -66,4 +66,15 @@ Di "Sahabat Peliharaan" Petshop, kami merevolusi cara penitipan hewan dengan men
     <string name="save">Save</string>
     <string name="back_button">Back Button</string>
     <string name="message_hint">Type something</string>
+    <string name="recent_chats">Recent Chats</string>
+    <string name="slot">Slot</string>
+    <string name="booking_form_title">Booking Petshop Hewan Peliharaan</string>
+    <string name="booking_form_subtitle">fill the blank input below here to process your transaction</string>
+    <string name="start_date">Start Date</string>
+    <string name="choose_start_date">Choose Start Date</string>
+    <string name="end_date">End Date</string>
+    <string name="choose_end_date">Choose End Date\n</string>
+    <string name="pet_description_hint">Enter your pet description</string>
+    <string name="book_now">Book Now</string>
+    <string name="cancel">Cancel</string>
 </resources>

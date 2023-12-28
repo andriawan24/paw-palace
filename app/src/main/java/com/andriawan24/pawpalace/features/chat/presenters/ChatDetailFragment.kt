@@ -49,7 +49,7 @@ class ChatDetailFragment : BaseFragment<FragmentChatDetailBinding, ChatDetailVM>
             viewModel.chats.collectLatest {
                 val anyList =  mutableListOf<Any>()
 
-                it.keys.forEach { date ->
+                it.keys.reversed().forEach { date ->
                     anyList.add(date)
                     it[date]?.reversed()?.forEach { chat ->
                         anyList.add(chat)

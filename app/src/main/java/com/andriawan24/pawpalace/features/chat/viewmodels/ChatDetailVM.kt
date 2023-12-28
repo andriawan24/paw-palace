@@ -56,11 +56,36 @@ class ChatDetailVM @Inject constructor(private val datastore: PawPalaceDatastore
             if (currentUser != null) {
                 this@ChatDetailVM.currentUser = datastore.getCurrentUser().first()
                 getMessages(currentUser.uid, petShopId)
+                updateAllMessageToRead(currentUser.uid, petShopId)
             } else {
                 auth.signOut()
                 datastore.setCurrentUser(null)
                 datastore.setCurrentPetShop(null)
                 _navigateToOnboarding.emit(None)
+            }
+        }
+    }
+
+    private fun updateAllMessageToRead(senderId: String, petShopId: String) {
+        viewModelScope.launch {
+            val chat = db.collection("chats")
+                .where(
+                    Filter.and(
+                        Filter.equalTo("senderId", senderId),
+                        Filter.equalTo("petShopId", petShopId)
+                    )
+                )
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .get()
+                .await()
+                .documents
+                .firstOrNull()
+
+            if (chat != null && chat.getBoolean("read") == false) {
+                db.collection("chats")
+                    .document(chat.id)
+                    .update("read", true)
+                    .await()
             }
         }
     }
@@ -109,7 +134,7 @@ class ChatDetailVM @Inject constructor(private val datastore: PawPalaceDatastore
                             createdAt = document.getDate("createdAt") ?: Date(),
                             read = document.getBoolean("read") ?: false,
                             senderId = document.getString("senderId").orEmpty(),
-                            petShopId = document.getString("receiverId").orEmpty(),
+                            petShopId = document.getString("petShopId").orEmpty(),
                             fromSender = document.getBoolean("fromSender") ?: false
                         )
                     }

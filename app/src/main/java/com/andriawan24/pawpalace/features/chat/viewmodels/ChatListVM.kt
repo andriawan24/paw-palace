@@ -9,6 +9,7 @@ import com.andriawan24.pawpalace.data.models.UserModel
 import com.andriawan24.pawpalace.utils.None
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.snapshots
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,7 +34,7 @@ class ChatListVM @Inject constructor(private val datastore: PawPalaceDatastore):
     private val _isGetChatLoading = MutableStateFlow(false)
     val isGetChatLoading = _isGetChatLoading.asStateFlow()
 
-    private val _chats = MutableStateFlow<List<ChatModel>>(emptyList())
+    private val _chats = MutableStateFlow<Map<PetShopModel, List<ChatModel>>>(emptyMap())
     val chats = _chats.asStateFlow()
 
     private val _getChatError = MutableSharedFlow<String>()
@@ -61,6 +62,7 @@ class ChatListVM @Inject constructor(private val datastore: PawPalaceDatastore):
             _isGetChatLoading.emit(true)
             db.collection("chats")
                 .whereEqualTo("senderId", senderId)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
                 .snapshots()
                 .catch {
                     Timber.e(it)
@@ -70,7 +72,7 @@ class ChatListVM @Inject constructor(private val datastore: PawPalaceDatastore):
                 .map { snapshots ->
                     snapshots.documents.map { document ->
                         val sender = document.get("sender") as? HashMap<*, *>
-                        val receiver = document.get("receiver") as? HashMap<*, *>
+                        val receiver = document.get("petShop") as? HashMap<*, *>
                         ChatModel(
                             id = document.id,
                             sender = UserModel(
@@ -94,14 +96,15 @@ class ChatListVM @Inject constructor(private val datastore: PawPalaceDatastore):
                             createdAt = document.getDate("createdAt") ?: Date(),
                             read = document.getBoolean("read") ?: false,
                             senderId = document.getString("senderId").orEmpty(),
-                            petShopId = document.getString("receiverId").orEmpty()
+                            petShopId = document.getString("petShopId").orEmpty()
                         )
                     }
                 }
                 .collectLatest {
                     Timber.e("Chat List: $it")
+                    val chatGrouped = it.groupBy { chat -> chat.petShop }
                     _isGetChatLoading.emit(false)
-                    _chats.emit(it)
+                    _chats.emit(chatGrouped)
                 }
         }
     }

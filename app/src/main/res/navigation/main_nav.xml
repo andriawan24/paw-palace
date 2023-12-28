@@ -93,6 +93,9 @@
         <action
             android:id="@+id/action_detailPetShopFragment_to_chatDetailFragment"
             app:destination="@id/chatDetailFragment" />
+        <action
+            android:id="@+id/action_detailPetShopFragment_to_bookingFormFragment"
+            app:destination="@id/bookingFormFragment" />
     </fragment>
     <fragment
         android:id="@+id/completeRegisterPetShopFragment"
@@ -137,4 +140,8 @@
             android:name="petShop"
             app:argType="com.andriawan24.pawpalace.data.models.PetShopModel" />
     </fragment>
+    <fragment
+        android:id="@+id/bookingFormFragment"
+        android:name="com.andriawan24.pawpalace.features.booking.presenters.BookingFormFragment"
+        android:label="BookingFormFragment" />
 </navigation>

@@ -145,7 +145,7 @@ class CompleteRegisterPetShopFragment: BaseFragment<FragmentCompleteRegisterPetS
     override fun onInitObserver() {
         lifecycleScope.launch {
             viewModel.isCompleteRegisterLoading.collectLatest {
-                // Do something
+                binding.buttonSave.isEnabled = !it
             }
         }
 
