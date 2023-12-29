@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.andriawan24.pawpalace.data.models.PetShopModel
 import com.andriawan24.pawpalace.databinding.ViewPetShopItemBinding
 import com.andriawan24.pawpalace.utils.RecyclerDiffUtil
+import java.text.NumberFormat
+import java.util.Locale
 
 class PetShopItemAdapter(
     private val listener: OnClickListener
@@ -21,8 +23,10 @@ class PetShopItemAdapter(
 
         fun bind(petShop: PetShopModel) {
             binding.textViewName.text = petShop.name
-            binding.textViewRating.text = "${petShop.rating}"
-            binding.textViewSlotPrice.text = "${petShop.slot} Slot • ${petShop.dailyPrice}/hari"
+            binding.textViewRating.text = "${petShop.rating/petShop.rated}"
+            val priceFormatter = NumberFormat.getCurrencyInstance(Locale("in", "ID"))
+            priceFormatter.maximumFractionDigits = 0
+            binding.textViewSlotPrice.text = "${petShop.slot} Slot • ${priceFormatter.format(petShop.dailyPrice)}/hari"
             binding.buttonDetail.setOnClickListener {
                 listener.onDetailClicked(petShop.id)
             }

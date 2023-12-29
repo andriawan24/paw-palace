@@ -1,5 +1,6 @@
 package com.andriawan24.pawpalace.features.profile.presenters
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.andriawan24.pawpalace.R
+import com.andriawan24.pawpalace.data.models.UserModel
 import com.andriawan24.pawpalace.databinding.FragmentProfileBinding
 import com.andriawan24.pawpalace.features.profile.viewmodels.ProfileVM
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,16 +39,30 @@ class ProfileFragment : Fragment() {
         initClickListener()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.initData()
+    }
+
     private fun initClickListener() {
-        binding.buttonSignOut.setOnClickListener {
+        binding.buttonLogout.setOnClickListener {
             viewModel.signOut()
+        }
+
+        binding.buttonEditProfile.setOnClickListener {
+            viewModel.setPetOwnerMode.value?.first?.let { user ->
+                findNavController().navigate(
+                    ProfileFragmentDirections.actionProfileFragmentToEditProfilePetOwnerFragment(user)
+                )
+            }
         }
     }
 
     private fun initObserver() {
         lifecycleScope.launch {
             viewModel.isProfileLoading.collectLatest {
-                binding.buttonSignOut.isEnabled = !it
+                binding.buttonLogout.isEnabled = !it
+                binding.buttonEditProfile.isEnabled = !it
             }
         }
 
@@ -54,6 +70,28 @@ class ProfileFragment : Fragment() {
             viewModel.navigateToOnboarding.collectLatest {
                 findNavController().navigate(R.id.action_global_onboarding)
             }
+        }
+
+        lifecycleScope.launch {
+            viewModel.setPetOwnerMode.collectLatest {
+                it?.first?.let { user ->
+                    setupPetOwner(user, it.second)
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.setPetShopMode.collectLatest {
+
+            }
+        }
+    }
+
+    private fun setupPetOwner(petOwner: UserModel, imageUri: Uri?) {
+        binding.textViewName.text = petOwner.name
+        binding.textViewEmail.text = petOwner.email
+        imageUri?.let {
+            binding.imageViewProfile.setImageURI(it)
         }
     }
 }

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.andriawan24.pawpalace.R
 import com.andriawan24.pawpalace.adapters.PetShopItemAdapter
 import com.andriawan24.pawpalace.base.BaseFragment
+import com.andriawan24.pawpalace.data.models.ChatModel
 import com.andriawan24.pawpalace.data.models.PetShopModel
 import com.andriawan24.pawpalace.databinding.FragmentHomeBinding
 import com.andriawan24.pawpalace.features.home.viewmodels.HomeVM
@@ -24,7 +25,8 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment<FragmentHomeBinding, HomeVM>(), PetShopItemAdapter.OnClickListener {
+class HomeFragment : BaseFragment<FragmentHomeBinding, HomeVM>(),
+    PetShopItemAdapter.OnClickListener {
 
     private val adapter = PetShopItemAdapter(this)
     override val viewModel: HomeVM by viewModels()
@@ -38,6 +40,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeVM>(), PetShopItemAda
             layoutManager = GridLayoutManager(requireContext(), 2)
             addItemDecoration(GridSpacingItemDecoration(2, 20))
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
         viewModel.initData()
     }
 
@@ -124,6 +130,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeVM>(), PetShopItemAda
     }
 
     override fun onChatClicked(petShop: PetShopModel) {
-        findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToChatDetailFragment(petShop))
+        val petShopChat = ChatModel.PetShop(
+            id = petShop.id,
+            userId = petShop.userId,
+            name = petShop.name
+        )
+        findNavController().navigate(
+            HomeFragmentDirections.actionHomeFragmentToChatDetailFragment(
+                petShopChat
+            )
+        )
     }
 }

@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andriawan24.pawpalace.data.local.PawPalaceDatastore
 import com.andriawan24.pawpalace.data.models.ChatModel
-import com.andriawan24.pawpalace.data.models.PetShopModel
 import com.andriawan24.pawpalace.data.models.UserModel
 import com.andriawan24.pawpalace.utils.None
 import com.google.firebase.Firebase
@@ -34,7 +33,7 @@ class ChatListVM @Inject constructor(private val datastore: PawPalaceDatastore):
     private val _isGetChatLoading = MutableStateFlow(false)
     val isGetChatLoading = _isGetChatLoading.asStateFlow()
 
-    private val _chats = MutableStateFlow<Map<PetShopModel, List<ChatModel>>>(emptyMap())
+    private val _chats = MutableStateFlow<Map<ChatModel.PetShop, List<ChatModel>>>(emptyMap())
     val chats = _chats.asStateFlow()
 
     private val _getChatError = MutableSharedFlow<String>()
@@ -82,15 +81,10 @@ class ChatListVM @Inject constructor(private val datastore: PawPalaceDatastore):
                                 phoneNumber = sender?.get("phoneNumber").toString(),
                                 location = sender?.get("location").toString(),
                             ),
-                            petShop = PetShopModel(
+                            petShop = ChatModel.PetShop(
                                 id = receiver?.get("id").toString(),
                                 name = receiver?.get("name").toString(),
-                                description = receiver?.get("description").toString(),
-                                userId = receiver?.get("userId").toString(),
-                                location = receiver?.get("location").toString(),
-                                dailyPrice = receiver?.get("dailyPrice").toString().toIntOrNull()
-                                    ?: 0,
-                                slot = receiver?.get("slot").toString().toIntOrNull() ?: 0,
+                                userId = receiver?.get("userId").toString()
                             ),
                             text = document.getString("text").orEmpty(),
                             createdAt = document.getDate("createdAt") ?: Date(),
@@ -101,7 +95,6 @@ class ChatListVM @Inject constructor(private val datastore: PawPalaceDatastore):
                     }
                 }
                 .collectLatest {
-                    Timber.e("Chat List: $it")
                     val chatGrouped = it.groupBy { chat -> chat.petShop }
                     _isGetChatLoading.emit(false)
                     _chats.emit(chatGrouped)

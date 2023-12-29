@@ -12,5 +12,6 @@ data class PetShopModel(
     val dailyPrice: Int,
     val slot: Int,
     val name: String,
-    val rating: Double = 0.0
+    val rating: Double = 0.0,
+    val rated: Int = 0
 ) : Parcelable

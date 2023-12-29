@@ -19,7 +19,7 @@ import java.util.Date
 import java.util.Locale
 
 @AndroidEntryPoint
-class BookingFormFragment: BaseFragment<FragmentBookingFormBinding, BookingFormVM>() {
+class BookingFormFragment : BaseFragment<FragmentBookingFormBinding, BookingFormVM>() {
 
     private val args: BookingFormFragmentArgs by navArgs()
     override val viewModel: BookingFormVM by viewModels()
@@ -110,13 +110,15 @@ class BookingFormFragment: BaseFragment<FragmentBookingFormBinding, BookingFormV
     }
 
     private fun validateStartEndDate(startDate: Date, endDate: Date): Boolean {
-        if (startDate.time > endDate.time) {
-            binding.editTextLayoutEndDate.isErrorEnabled = true
-            binding.editTextLayoutEndDate.error = "End date cannot less than start date"
+        if (startDate.time >= endDate.time) {
+            Toast.makeText(
+                requireContext(),
+                "Start date cannot be same or less than end date",
+                Toast.LENGTH_SHORT
+            ).show()
             return false
         }
 
-        binding.editTextLayoutEndDate.error = null
         return true
     }
 
@@ -161,8 +163,7 @@ class BookingFormFragment: BaseFragment<FragmentBookingFormBinding, BookingFormV
 
         lifecycleScope.launch {
             viewModel.isBookingSuccess.collectLatest {
-                Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
-                findNavController().navigate(R.id.action_global_history)
+                findNavController().navigate(BookingFormFragmentDirections.actionBookingFormFragmentToBookingConfirmationFragment(it))
             }
         }
 

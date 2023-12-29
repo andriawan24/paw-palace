@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context=".features.history.presenters.HistoryFragment">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="32dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_semibold"
+                android:textSize="16sp"
+                android:textColor="@color/textPrimary"
+                android:text="@string/booking_history" />
+
+            <TextView
+                android:id="@+id/text_view_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/inter_semibold"
+                android:textSize="14sp"
+                android:textColor="@color/colorPrimary"
+                tools:text="Rumah Kucing" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_view_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:strokeWidth="0dp"
+            app:cardCornerRadius="50dp"
+            app:contentPaddingLeft="16dp"
+            android:layout_marginStart="8dp"
+            app:contentPaddingRight="16dp"
+            app:contentPaddingTop="4dp"
+            app:contentPaddingBottom="4dp">
+
+            <TextView
+                android:id="@+id/text_view_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_semibold"
+                android:textSize="12sp"
+                tools:text="On Process" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:gravity="center_vertical"
+        android:layout_marginHorizontal="32dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_semibold"
+            android:textSize="12sp"
+            android:textColor="@color/textPrimary"
+            android:text="@string/price_prt_days" />
+
+        <TextView
+            android:id="@+id/text_view_price_per_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_medium"
+            android:textSize="12sp"
+            android:textColor="@color/textPrimary"
+            tools:text="Rp200.000" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center_vertical"
+        android:layout_marginHorizontal="32dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_semibold"
+            android:textSize="12sp"
+            android:textColor="@color/textPrimary"
+            android:text="@string/total_days" />
+
+        <TextView
+            android:id="@+id/text_view_total_days"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_medium"
+            android:textSize="12sp"
+            android:textColor="@color/textPrimary"
+            tools:text="5 days" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <TextView
+        android:id="@+id/text_view_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_medium"
+        android:layout_marginHorizontal="32dp"
+        android:textAlignment="textEnd"
+        android:textSize="12sp"
+        android:textColor="@color/textPrimary"
+        tools:text="8 December 2023 - 13 December 2023" />
+
+    <View
+        android:layout_width="match_parent"
+        android:background="@color/colorStroke"
+        android:layout_marginTop="24dp"
+        android:layout_marginHorizontal="32dp"
+        android:layout_height="1dp" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center_vertical"
+        android:layout_marginHorizontal="32dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_semibold"
+            android:textSize="12sp"
+            android:textColor="@color/textPrimary"
+            android:text="@string/total_price" />
+
+        <TextView
+            android:id="@+id/text_view_total_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_semibold"
+            android:textSize="12sp"
+            android:textColor="@color/green"
+            tools:text="Rp400.000" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginHorizontal="32dp"
+        android:fontFamily="@font/inter_semibold"
+        android:textSize="12sp"
+        android:textColor="@color/textPrimary"
+        android:text="@string/description" />
+
+    <TextView
+        android:id="@+id/text_view_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="italic"
+        android:layout_marginTop="4dp"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginBottom="32dp"
+        tools:text="Kucing saya sangat suka tidur setiap hari dan tidak berbuat apa apa  jadi tolong jangan diganggu. Cukup berikan dia makan ketika dia lapar"
+        android:fontFamily="@font/inter" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

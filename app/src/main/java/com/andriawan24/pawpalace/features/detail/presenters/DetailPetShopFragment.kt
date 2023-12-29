@@ -11,6 +11,8 @@ import com.andriawan24.pawpalace.features.detail.viewmodels.DetailPetShopVM
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
+import java.util.Locale
 
 @AndroidEntryPoint
 class DetailPetShopFragment : BaseFragment<FragmentDetailPetShopBinding, DetailPetShopVM>() {
@@ -31,9 +33,11 @@ class DetailPetShopFragment : BaseFragment<FragmentDetailPetShopBinding, DetailP
             viewModel.getDetailSuccess.collectLatest {
                 binding.textViewSlot.text = "${it.slot} Slot(s) Available"
                 binding.textViewName.text = it.name
-                binding.textViewPrice.text = it.dailyPrice.toString()
+                val priceFormatter = NumberFormat.getCurrencyInstance(Locale("in", "ID"))
+                priceFormatter.maximumFractionDigits = 0
+                binding.textViewPrice.text = priceFormatter.format(it.dailyPrice)
                 binding.textViewAddress.text = it.location.ifEmpty { "Location not set" }
-                binding.textViewRating.text = it.rating.toString()
+                binding.textViewRating.text = "${it.rating/it.rated}"
                 binding.textViewDescription.text = it.description
             }
         }

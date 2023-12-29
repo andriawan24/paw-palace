@@ -8,7 +8,6 @@ import com.andriawan24.pawpalace.R
 import com.andriawan24.pawpalace.adapters.ChatListAdapter
 import com.andriawan24.pawpalace.base.BaseFragment
 import com.andriawan24.pawpalace.data.models.ChatModel
-import com.andriawan24.pawpalace.data.models.PetShopModel
 import com.andriawan24.pawpalace.databinding.FragmentChatListBinding
 import com.andriawan24.pawpalace.features.chat.viewmodels.ChatListVM
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,7 +43,7 @@ class ChatListFragment : BaseFragment<FragmentChatListBinding, ChatListVM>(),
 
         lifecycleScope.launch {
             viewModel.chats.collectLatest {
-                val chats = mutableListOf<Pair<PetShopModel, ChatModel>>()
+                val chats = mutableListOf<Pair<ChatModel.PetShop, ChatModel>>()
                 it.keys.forEach { key ->
                     it[key]?.first { lastChat ->
                         chats.add(Pair(key, lastChat))
@@ -55,7 +54,7 @@ class ChatListFragment : BaseFragment<FragmentChatListBinding, ChatListVM>(),
         }
     }
 
-    override fun onChatClicked(petShop: PetShopModel) {
+    override fun onChatClicked(petShop: ChatModel.PetShop) {
         findNavController().navigate(ChatListFragmentDirections.actionChatFragmentToChatDetailFragment(petShop))
     }
 }

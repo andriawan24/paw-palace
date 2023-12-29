@@ -11,4 +11,9 @@
         <item name="android:statusBarColor">@color/colorPrimary</item>
         <item name="android:colorAccent">@color/colorPrimary</item>
     </style>
+    <style name="TitleAppBarStyle">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/inter_semibold</item>
+        <item name="android:textColor">@color/textPrimary</item>
+    </style>
 </resources>

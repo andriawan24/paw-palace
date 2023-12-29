@@ -87,7 +87,9 @@ class HomeVM @Inject constructor(
                         location = it.getString("location").orEmpty(),
                         slot = it.getLong("slot")?.toInt() ?: 0,
                         dailyPrice = it.getLong("dailyPrice")?.toInt() ?: 0,
-                        name = it.getString("name").orEmpty()
+                        name = it.getString("name").orEmpty(),
+                        rating = it.getDouble("rating") ?: 0.0,
+                        rated = it.getLong("rated")?.toInt() ?: 0
                     )
                 }.filter {
                     it.slot > 0

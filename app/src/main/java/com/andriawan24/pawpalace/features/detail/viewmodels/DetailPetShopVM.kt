@@ -2,8 +2,8 @@ package com.andriawan24.pawpalace.features.detail.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.andriawan24.pawpalace.data.models.ChatModel
 import com.andriawan24.pawpalace.data.models.PetShopModel
-import com.andriawan24.pawpalace.data.models.UserModel
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,11 +30,14 @@ class DetailPetShopVM @Inject constructor(): ViewModel() {
     private val _getDetailSuccess = MutableSharedFlow<PetShopModel>()
     val getDetailSuccess = _getDetailSuccess.asSharedFlow()
 
-    private val _goToMessageRoom = MutableSharedFlow<PetShopModel>()
+    private val _goToMessageRoom = MutableSharedFlow<ChatModel.PetShop>()
     val goToMessageRoom = _goToMessageRoom.asSharedFlow()
 
     private val _petShopState = MutableStateFlow<PetShopModel?>(null)
     val petShopState = _petShopState.asStateFlow()
+
+    private val _petShopChatState = MutableStateFlow<ChatModel.PetShop?>(null)
+    val petShopChatState = _petShopChatState.asStateFlow()
 
     fun initData(petShopId: String) {
         viewModelScope.launch {
@@ -53,9 +56,17 @@ class DetailPetShopVM @Inject constructor(): ViewModel() {
                     dailyPrice = petShopDocument.getLong("dailyPrice")?.toInt() ?: 0,
                     slot = petShopDocument.getLong("slot")?.toInt() ?: 0,
                     name = petShopDocument.getString("name").orEmpty(),
-                    rating = petShopDocument.getDouble("rating") ?: 0.0
+                    rating = petShopDocument.getDouble("rating") ?: 0.0,
+                    rated = petShopDocument.getLong("rated")?.toInt() ?: 0
                 )
 
+                val petShopChat = ChatModel.PetShop(
+                    id = petShopDocument.id,
+                    userId = petShopDocument.getString("userId").orEmpty(),
+                    name = petShopDocument.getString("name").orEmpty()
+                )
+
+                _petShopChatState.emit(petShopChat)
                 _petShopState.emit(petShop)
                 _getDetailSuccess.emit(petShop)
                 _isGetDetailLoading.emit(false)
@@ -69,7 +80,7 @@ class DetailPetShopVM @Inject constructor(): ViewModel() {
 
     fun onMessageClicked() {
         viewModelScope.launch {
-            _petShopState.value?.let { petShopModel ->
+            _petShopChatState.value?.let { petShopModel ->
                 _goToMessageRoom.emit(petShopModel)
             }
         }

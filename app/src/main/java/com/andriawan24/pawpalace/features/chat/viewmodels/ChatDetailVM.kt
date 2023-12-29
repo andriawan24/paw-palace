@@ -120,15 +120,10 @@ class ChatDetailVM @Inject constructor(private val datastore: PawPalaceDatastore
                                 phoneNumber = sender?.get("phoneNumber").toString(),
                                 location = sender?.get("location").toString(),
                             ),
-                            petShop = PetShopModel(
+                            petShop = ChatModel.PetShop(
                                 id = receiver?.get("id").toString(),
                                 name = receiver?.get("name").toString(),
-                                description = receiver?.get("description").toString(),
-                                userId = receiver?.get("userId").toString(),
-                                location = receiver?.get("location").toString(),
-                                dailyPrice = receiver?.get("dailyPrice").toString().toIntOrNull()
-                                    ?: 0,
-                                slot = receiver?.get("slot").toString().toIntOrNull() ?: 0,
+                                userId = receiver?.get("userId").toString()
                             ),
                             text = document.getString("text").orEmpty(),
                             createdAt = document.getDate("createdAt") ?: Date(),
@@ -152,7 +147,7 @@ class ChatDetailVM @Inject constructor(private val datastore: PawPalaceDatastore
         }
     }
 
-    fun sendMessage(text: String, petShop: PetShopModel) {
+    fun sendMessage(text: String, petShop: ChatModel.PetShop) {
         viewModelScope.launch {
             currentUser?.let {
                 val chatDoc = db.collection("chats")

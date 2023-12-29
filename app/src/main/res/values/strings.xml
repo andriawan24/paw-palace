@@ -52,7 +52,6 @@
  Dengan pengalaman bertahun-tahun dalam merawat dan memahami hewan, kami di "Sahabat Peliharaan" hadir untuk memberikan perhatian dan kasih sayang yang hewan kesayangan Anda perlukan selama Anda berada jauh dari mereka. Kami tahu bahwa tiap hewan memiliki kepribadian dan kebutuhan yang unik, oleh karena itu, kami menyediakan layanan personalisasi yang bisa disesuaikan dengan preferensi hewan peliharaan Anda.
  Keamanan dan kesehatan sahabat berbulu Anda adalah prioritas kami. Oleh karena itu, petshop kami dilengkapi dengan fasilitas yang terjaga kebersihannya, ruang bermain yang luas dan aman, serta kamar tidur yang nyaman dengan pemanas atau penyejuk udara tergantung pada kebutuhan hewan Anda. Tim kami yang profesional juga selalu siap 24/7 untuk menjamin bahwa tiap hewan yang dititipkan mendapatkan perawatan yang mereka perlukan.
 Program penitipan kami meliputi sesi permainan, jalan-jalan rutin, dan sesi pelukan yang akan memastikan hewan kesayangan Anda terhibur, senang, dan tentunya sehat.
-
 Di "Sahabat Peliharaan" Petshop, kami merevolusi cara penitipan hewan dengan menyediakan layanan yang sepenuh hati. Kunjungi kami di Jalan Buah Batu, dan rasakan ketenangan pikiran Anda saat mengetahui sahabat kecil Anda ditangani dengan perawatan terbaik.</string>
     <string name="showing_your_slot">Showing Your Slot</string>
     <string name="booking">Booking</string>
@@ -77,4 +76,26 @@ Di "Sahabat Peliharaan" Petshop, kami merevolusi cara penitipan hewan dengan men
     <string name="pet_description_hint">Enter your pet description</string>
     <string name="book_now">Book Now</string>
     <string name="cancel">Cancel</string>
+    <string name="booking_summary">Booking Summary</string>
+    <string name="price_prt_days">Price /days</string>
+    <string name="total_days">Total Days</string>
+    <string name="total_price">Total Price</string>
+    <string name="previous">Previous</string>
+    <string name="next_and_ask_detail_payments">Next and Ask Detail Payments</string>
+    <string name="booking_history">Booking History</string>
+    <string name="location_icon">Location Icon</string>
+    <string name="give_rating">Give Rating</string>
+    <string name="rating_petshop">Rating Petshop</string>
+    <string name="give_rating_description">give the pet shop a star to boost their popularity, don’t hesitate to give low rate if you feel the service is bad</string>
+    <string name="submit">Submit</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="content">CONTENT</string>
+    <string name="profile_icon">Profile Icon</string>
+    <string name="my_profile">My Profile</string>
+    <string name="customize_your_profile">Customize your profile</string>
+    <string name="next_button">Next Button</string>
+    <string name="log_out">Log Out</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="edit_icon_button">Edit Icon Button</string>
+    <string name="save_changes">Save Changes</string>
 </resources>

@@ -1,6 +1,5 @@
 package com.andriawan24.pawpalace.features.booking.viewmodels
 
-import androidx.datastore.dataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andriawan24.pawpalace.data.local.PawPalaceDatastore
@@ -9,6 +8,7 @@ import com.andriawan24.pawpalace.data.models.PetShopModel
 import com.andriawan24.pawpalace.utils.None
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -23,19 +23,17 @@ import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
-class BookingFormVM @Inject constructor(private val datastore: PawPalaceDatastore): ViewModel() {
+class BookingConfirmationVM @Inject constructor(
+    private val datastore: PawPalaceDatastore
+): ViewModel() {
 
     private val db = Firebase.firestore
-    private val _startDateState = MutableStateFlow(Date())
-    val startDateState = _startDateState.asStateFlow()
-
-    private val _endDateState = MutableStateFlow(Date())
-    val endDateState = _endDateState.asStateFlow()
+    private val auth = Firebase.auth
 
     private val _isBookingLoading = MutableStateFlow(false)
     val isBookingLoading = _isBookingLoading.asStateFlow()
 
-    private val _isBookingSuccess = MutableSharedFlow<BookingModel>()
+    private val _isBookingSuccess = MutableSharedFlow<None>()
     val isBookingSuccess = _isBookingSuccess.asSharedFlow()
 
     private val _isBookingError = MutableSharedFlow<String>()
@@ -44,42 +42,28 @@ class BookingFormVM @Inject constructor(private val datastore: PawPalaceDatastor
     private val _navigateToOnboarding = MutableSharedFlow<None>()
     val navigateToOnboarding = _navigateToOnboarding.asSharedFlow()
 
-    fun setStartDate(time: Long) {
-        viewModelScope.launch {
-            val date = Date(time)
-            _startDateState.emit(date)
-        }
-    }
-
-    fun setEndDate(time: Long) {
-        viewModelScope.launch {
-            val date = Date(time)
-            _endDateState.emit(date)
-        }
-    }
-
-    fun saveBooking(petShop: PetShopModel, startDate: Date, endDate: Date, description: String) {
+    fun saveBooking(booking: BookingModel) {
         viewModelScope.launch {
             _isBookingLoading.emit(true)
             try {
-                val user = Firebase.auth.currentUser
+                val user = auth.currentUser
                 if (user != null) {
                     val bookingDocument = db.collection("bookings")
                         .document()
 
                     datastore.getCurrentUser().first()?.let {
-                        val booking = BookingModel(
-                            id = bookingDocument.id,
-                            petShop = petShop,
-                            petOwner = it,
-                            startDate = startDate,
-                            endDate = endDate,
-                            description = description,
-                            status = BookingModel.Status.PENDING.statusName
+                        db.collection("pet_shops")
+                            .document(booking.petShop.id)
+                            .update("slot", FieldValue.increment(-1))
+                            .await()
+                        val newBooking = booking.copy(
+                            petShop = booking.petShop.copy(
+                                slot = booking.petShop.slot - 1
+                            )
                         )
-
+                        bookingDocument.set(newBooking).await()
                         _isBookingLoading.emit(false)
-                        _isBookingSuccess.emit(booking)
+                        _isBookingSuccess.emit(None)
                     }
                 } else {
                     Firebase.auth.signOut()

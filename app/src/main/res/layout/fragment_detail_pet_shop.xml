@@ -98,7 +98,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/location_icon"
+                            app:srcCompat="@drawable/ic_location" />
 
                         <TextView
                             android:id="@+id/text_view_address"
@@ -107,6 +114,7 @@
                             android:fontFamily="@font/inter_light"
                             android:textColor="@color/textSecondary"
                             android:textSize="14sp"
+                            android:layout_marginStart="8dp"
                             tools:text="Jl. Merkurius 3 No 8" />
 
                     </androidx.appcompat.widget.LinearLayoutCompat>

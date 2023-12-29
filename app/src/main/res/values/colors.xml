@@ -8,4 +8,8 @@
     <color name="textSecondary">#727C8D</color>
     <color name="colorStroke">#E3E5EC</color>
     <color name="yellow">#FFC700</color>
+    <color name="yellow_background">#FFF9E5</color>
+    <color name="green">#00A862</color>
+    <color name="green_background">#E5FFF4</color>
+    <color name="red">#EB0A33</color>
 </resources>

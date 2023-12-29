@@ -9,7 +9,7 @@
         android:id="@+id/onboardingFragment"
         android:name="com.andriawan24.pawpalace.features.onboarding.presenters.OnboardingFragment"
         android:label="fragment_onboarding"
-        tools:layout="@layout/fragment_onboarding" >
+        tools:layout="@layout/fragment_onboarding">
         <action
             android:id="@+id/action_onboardingFragment_to_loginFragment"
             app:destination="@id/loginPetOwnerFragment" />
@@ -60,12 +60,23 @@
         android:id="@+id/historyFragment"
         android:name="com.andriawan24.pawpalace.features.history.presenters.HistoryFragment"
         android:label="fragment_history"
-        tools:layout="@layout/fragment_history" />
+        tools:layout="@layout/fragment_history" >
+        <action
+            android:id="@+id/action_historyFragment_to_historyDetailDialogFragment"
+            app:destination="@id/historyDetailDialogFragment" />
+        <action
+            android:id="@+id/action_historyFragment_to_historyGiveRatingDialogFragment"
+            app:destination="@id/historyGiveRatingDialogFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.andriawan24.pawpalace.features.profile.presenters.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_editProfilePetOwnerFragment"
+            app:destination="@id/editProfilePetOwnerFragment" />
+    </fragment>
     <fragment
         android:id="@+id/loginPetShopFragment"
         android:name="com.andriawan24.pawpalace.features.login.presenters.LoginPetShopFragment"
@@ -105,6 +116,48 @@
             android:name="petShopId"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/chatDetailFragment"
+        android:name="com.andriawan24.pawpalace.features.chat.presenters.ChatDetailFragment"
+        android:label="ChatDetailFragment" >
+        <argument
+            android:name="petShop"
+            app:argType="com.andriawan24.pawpalace.data.models.ChatModel$PetShop" />
+        <argument
+            android:name="defaultMessage"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/bookingFormFragment"
+        tools:layout="@layout/fragment_booking_form"
+        android:name="com.andriawan24.pawpalace.features.booking.presenters.BookingFormFragment"
+        android:label="BookingFormFragment" >
+        <argument
+            android:name="petShop"
+            app:argType="com.andriawan24.pawpalace.data.models.PetShopModel" />
+        <action
+            android:id="@+id/action_bookingFormFragment_to_bookingConfirmationFragment"
+            app:destination="@id/bookingConfirmationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/bookingConfirmationFragment"
+        tools:layout="@layout/fragment_booking_confirmation"
+        android:name="com.andriawan24.pawpalace.features.booking.presenters.BookingConfirmationFragment"
+        android:label="BookingConfirmationFragment" >
+        <argument
+            android:name="booking"
+            app:argType="com.andriawan24.pawpalace.data.models.BookingModel" />
+        <action
+            android:id="@+id/action_bookingConfirmationFragment_to_detailPetShopFragment"
+            app:popUpTo="@id/detailPetShopFragment" />
+        <action
+            android:id="@+id/action_bookingConfirmationFragment_to_chatDetailFragment"
+            app:destination="@id/chatDetailFragment"
+            app:popUpTo="@id/detailPetShopFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <!-- Global Actions for Bottom Navigation -->
     <action
@@ -132,19 +185,29 @@
         app:destination="@id/onboardingFragment"
         app:popUpTo="@id/main_nav"
         app:popUpToInclusive="true" />
-    <fragment
-        android:id="@+id/chatDetailFragment"
-        android:name="com.andriawan24.pawpalace.features.chat.presenters.ChatDetailFragment"
-        android:label="ChatDetailFragment" >
+    <dialog
+        android:id="@+id/historyDetailDialogFragment"
+        tools:layout="@layout/fragment_history_detail_dialog"
+        android:name="com.andriawan24.pawpalace.features.history.presenters.HistoryDetailDialogFragment"
+        android:label="HistoryDetailDialogFragment" >
         <argument
-            android:name="petShop"
-            app:argType="com.andriawan24.pawpalace.data.models.PetShopModel" />
-    </fragment>
+            android:name="booking"
+            app:argType="com.andriawan24.pawpalace.data.models.BookingModel" />
+    </dialog>
+    <dialog
+        android:id="@+id/historyGiveRatingDialogFragment"
+        android:name="com.andriawan24.pawpalace.features.history.presenters.HistoryGiveRatingDialogFragment"
+        android:label="HistoryGiveRatingDialogFragment" >
+        <argument
+            android:name="booking"
+            app:argType="com.andriawan24.pawpalace.data.models.BookingModel" />
+    </dialog>
     <fragment
-        android:id="@+id/bookingFormFragment"
-        android:name="com.andriawan24.pawpalace.features.booking.presenters.BookingFormFragment"
-        android:label="BookingFormFragment" >
-        <argument android:name="petShop"
-            app:argType="com.andriawan24.pawpalace.data.models.PetShopModel" />
+        android:id="@+id/editProfilePetOwnerFragment"
+        android:name="com.andriawan24.pawpalace.features.profile.presenters.EditProfilePetOwnerFragment"
+        android:label="EditProfilePetOwnerFragment" >
+        <argument
+            android:name="user"
+            app:argType="com.andriawan24.pawpalace.data.models.UserModel" />
     </fragment>
 </navigation>

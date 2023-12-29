@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.andriawan24.pawpalace.R
 import com.andriawan24.pawpalace.adapters.ChatItemAdapter
 import com.andriawan24.pawpalace.base.BaseFragment
+import com.andriawan24.pawpalace.data.models.ChatModel
 import com.andriawan24.pawpalace.data.models.PetShopModel
 import com.andriawan24.pawpalace.databinding.FragmentChatDetailBinding
 import com.andriawan24.pawpalace.features.chat.viewmodels.ChatDetailVM
@@ -38,9 +39,13 @@ class ChatDetailFragment : BaseFragment<FragmentChatDetailBinding, ChatDetailVM>
         binding.recyclerViewChat.adapter = adapter
         binding.recyclerViewChat.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         viewModel.initData(args.petShop.id)
+        if (args.defaultMessage != null) {
+            viewModel.sendMessage(args.defaultMessage.orEmpty(), args.petShop)
+            viewModel.sendMessage("Teknis Pembayarannya itu bagaimana yaa kak?", args.petShop)
+        }
     }
 
-    private fun initPetShop(petShop: PetShopModel) {
+    private fun initPetShop(petShop: ChatModel.PetShop) {
         binding.textViewName.text = petShop.name
     }
 
