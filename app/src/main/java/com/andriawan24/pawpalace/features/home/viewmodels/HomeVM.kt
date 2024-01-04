@@ -3,12 +3,12 @@ package com.andriawan24.pawpalace.features.home.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andriawan24.pawpalace.data.local.PawPalaceDatastore
+import com.andriawan24.pawpalace.data.models.BookingModel
 import com.andriawan24.pawpalace.data.models.PetShopModel
 import com.andriawan24.pawpalace.data.models.UserModel
 import com.andriawan24.pawpalace.utils.None
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.firestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,6 +44,15 @@ class HomeVM @Inject constructor(
     private val _getPetShopsSuccess = MutableSharedFlow<List<PetShopModel>>()
     val getPetShopsSuccess = _getPetShopsSuccess.asSharedFlow()
 
+    private val _getPetOwnerLoading = MutableStateFlow(false)
+    val getPetOwnerLoading = _getPetOwnerLoading.asStateFlow()
+
+    private val _getPetOwnerError = MutableSharedFlow<String>()
+    val getPetOwnerError = _getPetOwnerError.asSharedFlow()
+
+    private val _getPetOwnerSuccess = MutableSharedFlow<Pair<List<BookingModel>, Int>>()
+    val getPetOwnerSuccess = _getPetOwnerSuccess.asSharedFlow()
+
     private val _setPetShopMode = MutableSharedFlow<PetShopModel>()
     val setPetShopMode = _setPetShopMode.asSharedFlow()
 
@@ -56,6 +66,7 @@ class HomeVM @Inject constructor(
                 val user = dataStore.getCurrentUser().first()!!
                 if (petShop != null) {
                     _setPetShopMode.emit(petShop)
+                    getPetOwners(petShop)
                 } else {
                     _setPetOwnerMode.emit(user)
                     getPetShops(user)
@@ -66,6 +77,58 @@ class HomeVM @Inject constructor(
                 dataStore.setCurrentPetShop(null)
                 _navigateToOnboarding.emit(None)
                 return@launch
+            }
+        }
+    }
+
+    private fun getPetOwners(user: PetShopModel) {
+        viewModelScope.launch {
+            _getPetOwnerLoading.emit(true)
+            try {
+                val bookingDocuments = db.collection("bookings")
+                    .whereNotEqualTo("petShop.id", user.id)
+                    .get()
+                    .await()
+
+                val bookings = bookingDocuments.documents.map {
+                    val petOwner = it.get("petOwner") as? HashMap<*, *>
+                    val petShop = it.get("petShop") as? HashMap<*, *>
+                    BookingModel(
+                        id = it.id,
+                        petShop = PetShopModel(
+                            id = petShop?.get("id").toString(),
+                            name = petShop?.get("name").toString(),
+                            description = petShop?.get("description").toString(),
+                            userId = petShop?.get("userId").toString(),
+                            location = petShop?.get("location").toString(),
+                            dailyPrice = petShop?.get("dailyPrice").toString().toIntOrNull()
+                                ?: 0,
+                            slot = petShop?.get("slot").toString().toIntOrNull() ?: 0,
+                        ),
+                        petOwner = UserModel(
+                            id = petOwner?.get("id").toString(),
+                            name = petOwner?.get("name").toString(),
+                            email = petOwner?.get("email").toString(),
+                            phoneNumber = petOwner?.get("phoneNumber").toString(),
+                            location = petOwner?.get("location").toString(),
+                        ),
+                        startDate = it.getDate("startDate") ?: Date(),
+                        endDate = it.getDate("endDate") ?: Date(),
+                        createdDate = it.getDate("createdDate") ?: Date(),
+                        description = it.getString("description").orEmpty(),
+                        status = it.getString("status").orEmpty(),
+                        rating = it.getDouble("rating") ?: 0.0
+                    )
+                }
+
+                withContext(Dispatchers.Main) {
+                    _getPetOwnerLoading.emit(false)
+                    _getPetOwnerSuccess.emit(Pair(bookings, user.slot))
+                }
+            } catch (e: Exception) {
+                Timber.e(e)
+                _getPetShopsLoading.emit(false)
+                _getPetShopsError.emit(e.localizedMessage.orEmpty())
             }
         }
     }

@@ -78,10 +78,13 @@ class LoginPetOwnerFragment : Fragment() {
         binding.buttonSignIn.setOnClickListener {
             val email = binding.editTextEmail.text.toString()
             val password = binding.editTextPassword.text.toString()
-
             if (validateInput(email, password)) {
                 viewModel.signIn(email, password)
             }
+        }
+
+        binding.buttonSignInPetShop.setOnClickListener {
+            findNavController().navigate(LoginPetOwnerFragmentDirections.actionLoginPetOwnerFragmentToLoginPetShopFragment())
         }
     }
 

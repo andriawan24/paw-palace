@@ -1,6 +1,7 @@
 package com.andriawan24.pawpalace.features.home.presenters
 
 
+import android.annotation.SuppressLint
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
@@ -13,7 +14,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.andriawan24.pawpalace.R
 import com.andriawan24.pawpalace.adapters.PetShopItemAdapter
+import com.andriawan24.pawpalace.adapters.SlotItemAdapter
 import com.andriawan24.pawpalace.base.BaseFragment
+import com.andriawan24.pawpalace.data.models.BookingModel
 import com.andriawan24.pawpalace.data.models.ChatModel
 import com.andriawan24.pawpalace.data.models.PetShopModel
 import com.andriawan24.pawpalace.databinding.FragmentHomeBinding
@@ -28,18 +31,15 @@ import timber.log.Timber
 class HomeFragment : BaseFragment<FragmentHomeBinding, HomeVM>(),
     PetShopItemAdapter.OnClickListener {
 
-    private val adapter = PetShopItemAdapter(this)
+    private val petShopAdapter = PetShopItemAdapter(this)
+    private val slotItemAdapter = SlotItemAdapter()
     override val viewModel: HomeVM by viewModels()
     override val binding: FragmentHomeBinding by lazy {
         FragmentHomeBinding.inflate(layoutInflater)
     }
 
     override fun onInitViews() {
-        binding.recyclerViewPetShop.adapter = adapter
-        binding.recyclerViewPetShop.apply {
-            layoutManager = GridLayoutManager(requireContext(), 2)
-            addItemDecoration(GridSpacingItemDecoration(2, 20))
-        }
+
     }
 
     override fun onResume() {
@@ -47,15 +47,26 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeVM>(),
         viewModel.initData()
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onInitObserver() {
         lifecycleScope.launch {
             viewModel.setPetShopMode.collectLatest {
+                binding.recyclerViewPetShop.adapter = slotItemAdapter
+                binding.recyclerViewPetShop.apply {
+                    layoutManager = GridLayoutManager(requireContext(), 2)
+                    addItemDecoration(GridSpacingItemDecoration(2, 20))
+                }
                 setupPetShopMode(petShop = it)
             }
         }
 
         lifecycleScope.launch {
             viewModel.setPetOwnerMode.collectLatest {
+                binding.recyclerViewPetShop.adapter = petShopAdapter
+                binding.recyclerViewPetShop.apply {
+                    layoutManager = GridLayoutManager(requireContext(), 2)
+                    addItemDecoration(GridSpacingItemDecoration(2, 20))
+                }
                 setupPetOwnerMode(location = it.location)
             }
         }
@@ -74,9 +85,33 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeVM>(),
 
         lifecycleScope.launch {
             viewModel.getPetShopsSuccess.collectLatest {
-                Timber.d("Pet Shops: $it")
                 binding.textViewPetShopCount.text = "Showing ${it.size} Pet Shop"
-                adapter.setData(it)
+                petShopAdapter.setData(it)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.getPetOwnerLoading.collectLatest {
+                // do something when loading
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.getPetOwnerError.collectLatest { message ->
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.getPetOwnerSuccess.collectLatest {
+                val bookings = mutableListOf<BookingModel?>()
+                it.second.until(0).forEach { _ ->
+                    bookings.add(null)
+                }
+                it.first.indices.forEach { bookingIndex ->
+                    bookings[bookingIndex] = it.first[bookingIndex]
+                }
+                slotItemAdapter.setData(bookings)
             }
         }
     }

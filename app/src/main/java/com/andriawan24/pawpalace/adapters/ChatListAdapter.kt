@@ -12,8 +12,9 @@ import com.andriawan24.pawpalace.utils.RecyclerDiffUtil
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class ChatListAdapter(private val listener: OnClickListener) :
-    RecyclerView.Adapter<ChatListAdapter.ChatListItemViewHolder>() {
+class ChatListAdapter(
+    private val listener: OnClickListener
+) : RecyclerView.Adapter<ChatListAdapter.ChatListItemViewHolder>() {
 
     private var chats = emptyList<Pair<ChatModel.PetShop, ChatModel>>()
 
@@ -49,8 +50,7 @@ class ChatListAdapter(private val listener: OnClickListener) :
     override fun getItemCount(): Int = chats.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatListItemViewHolder {
-        val binding =
-            ViewChatListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ViewChatListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ChatListItemViewHolder(binding, listener)
     }
 
