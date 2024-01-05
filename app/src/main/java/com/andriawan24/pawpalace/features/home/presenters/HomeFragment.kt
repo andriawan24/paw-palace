@@ -57,6 +57,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeVM>(),
                     addItemDecoration(GridSpacingItemDecoration(2, 20))
                 }
                 setupPetShopMode(petShop = it)
+                viewModel.getPetOwners(it)
             }
         }
 
@@ -68,6 +69,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeVM>(),
                     addItemDecoration(GridSpacingItemDecoration(2, 20))
                 }
                 setupPetOwnerMode(location = it.location)
+                viewModel.getPetShops(it)
             }
         }
 
@@ -105,12 +107,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeVM>(),
         lifecycleScope.launch {
             viewModel.getPetOwnerSuccess.collectLatest {
                 val bookings = mutableListOf<BookingModel?>()
-                it.second.until(0).forEach { _ ->
+                (1..it.second).forEach { _ ->
                     bookings.add(null)
                 }
                 it.first.indices.forEach { bookingIndex ->
                     bookings[bookingIndex] = it.first[bookingIndex]
                 }
+                Timber.d("Bookings $bookings, Slot: ${it.second}")
                 slotItemAdapter.setData(bookings)
             }
         }

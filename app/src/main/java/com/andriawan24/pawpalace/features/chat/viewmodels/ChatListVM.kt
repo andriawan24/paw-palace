@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andriawan24.pawpalace.data.local.PawPalaceDatastore
 import com.andriawan24.pawpalace.data.models.ChatModel
+import com.andriawan24.pawpalace.data.models.PetShopModel
 import com.andriawan24.pawpalace.data.models.UserModel
 import com.andriawan24.pawpalace.utils.None
 import com.google.firebase.Firebase
@@ -18,10 +19,10 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,8 +37,17 @@ class ChatListVM @Inject constructor(private val datastore: PawPalaceDatastore):
     private val _chats = MutableStateFlow<Map<ChatModel.PetShop, List<ChatModel>>>(emptyMap())
     val chats = _chats.asStateFlow()
 
+    private val _chatsPetShop = MutableStateFlow<Map<UserModel, List<ChatModel>>>(emptyMap())
+    val chatsPetShop = _chatsPetShop.asStateFlow()
+
     private val _getChatError = MutableSharedFlow<String>()
     val getChatError = _getChatError.asSharedFlow()
+
+    private val _setPetShop = MutableSharedFlow<None>()
+    val setPetShop = _setPetShop.asSharedFlow()
+
+    private val _setPetOwner = MutableSharedFlow<None>()
+    val setPetOwner = _setPetOwner.asSharedFlow()
 
     private val _navigateToOnboarding = MutableSharedFlow<None>()
     val navigateToOnboarding = _navigateToOnboarding.asSharedFlow()
@@ -45,8 +55,15 @@ class ChatListVM @Inject constructor(private val datastore: PawPalaceDatastore):
     fun initData() {
         viewModelScope.launch {
             val currentUser = auth.currentUser
+            val petShop = datastore.getCurrentPetShop().first()
             if (currentUser != null) {
-                getMessages(currentUser.uid)
+                if (petShop != null) {
+                    _setPetShop.emit(None)
+                    getPetShopMessages(petShop)
+                } else {
+                    _setPetOwner.emit(None)
+                    getMessages(currentUser.uid)
+                }
             } else {
                 auth.signOut()
                 datastore.setCurrentUser(null)
@@ -56,10 +73,33 @@ class ChatListVM @Inject constructor(private val datastore: PawPalaceDatastore):
         }
     }
 
+    private fun getPetShopMessages(petShop: PetShopModel) {
+        viewModelScope.launch {
+            _isGetChatLoading.emit(true)
+            db.collection(ChatModel.REFERENCE_NAME)
+                .whereEqualTo("petShopId", petShop.id)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .snapshots()
+                .catch {
+                    Timber.e(it)
+                    _isGetChatLoading.emit(false)
+                    _getChatError.emit(it.localizedMessage.orEmpty())
+                }
+                .map { snapshots ->
+                    snapshots.documents.map(ChatModel::from)
+                }
+                .collectLatest {
+                    val chatGrouped = it.groupBy { chat -> chat.sender }
+                    _isGetChatLoading.emit(false)
+                    _chatsPetShop.emit(chatGrouped)
+                }
+        }
+    }
+
     private fun getMessages(senderId: String) {
         viewModelScope.launch {
             _isGetChatLoading.emit(true)
-            db.collection("chats")
+            db.collection(ChatModel.REFERENCE_NAME)
                 .whereEqualTo("senderId", senderId)
                 .orderBy("createdAt", Query.Direction.DESCENDING)
                 .snapshots()
@@ -69,30 +109,7 @@ class ChatListVM @Inject constructor(private val datastore: PawPalaceDatastore):
                     _getChatError.emit(it.localizedMessage.orEmpty())
                 }
                 .map { snapshots ->
-                    snapshots.documents.map { document ->
-                        val sender = document.get("sender") as? HashMap<*, *>
-                        val receiver = document.get("petShop") as? HashMap<*, *>
-                        ChatModel(
-                            id = document.id,
-                            sender = UserModel(
-                                id = sender?.get("id").toString(),
-                                name = sender?.get("name").toString(),
-                                email = sender?.get("email").toString(),
-                                phoneNumber = sender?.get("phoneNumber").toString(),
-                                location = sender?.get("location").toString(),
-                            ),
-                            petShop = ChatModel.PetShop(
-                                id = receiver?.get("id").toString(),
-                                name = receiver?.get("name").toString(),
-                                userId = receiver?.get("userId").toString()
-                            ),
-                            text = document.getString("text").orEmpty(),
-                            createdAt = document.getDate("createdAt") ?: Date(),
-                            read = document.getBoolean("read") ?: false,
-                            senderId = document.getString("senderId").orEmpty(),
-                            petShopId = document.getString("petShopId").orEmpty()
-                        )
-                    }
+                    snapshots.documents.map(ChatModel::from)
                 }
                 .collectLatest {
                     val chatGrouped = it.groupBy { chat -> chat.petShop }

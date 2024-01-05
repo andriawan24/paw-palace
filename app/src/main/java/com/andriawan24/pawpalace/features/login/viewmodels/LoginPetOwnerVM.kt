@@ -48,13 +48,7 @@ class LoginPetOwnerVM @Inject constructor(
                         .get()
                         .await()
 
-                    val userModel = UserModel(
-                        name = userDocument.getString("name").orEmpty(),
-                        email = userDocument.getString("email").orEmpty(),
-                        id = userDocument.getString("id").orEmpty(),
-                        phoneNumber = userDocument.getString("phoneNumber").orEmpty()
-                    )
-
+                    val userModel = UserModel.from(userDocument)
                     datastore.setCurrentUser(userModel)
                 }
 

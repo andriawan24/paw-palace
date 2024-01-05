@@ -63,15 +63,18 @@ class EditProfileVM @Inject constructor(private val datastore: PawPalaceDatastor
                         .updateProfile(updateProfileRequest)
                         .await()
 
-                    db.collection("users")
-                        .document(currentFirebaseUser.uid)
-                        .update("name", name, "phoneNumber", phoneNumber)
-                        .await()
-
                     val newUser = user.copy(
                         name = name,
                         phoneNumber = phoneNumber
                     )
+
+                    db.collection(UserModel.REFERENCE_NAME)
+                        .document(currentFirebaseUser.uid)
+                        .update(
+                            "name", newUser.name,
+                            "phoneNumber", newUser.phoneNumber
+                        )
+                        .await()
 
                     datastore.setCurrentUser(newUser)
                     _isEditProfileLoading.emit(false)

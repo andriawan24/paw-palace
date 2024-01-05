@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
-import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -52,15 +51,12 @@ class BookingConfirmationVM @Inject constructor(
                         .document()
 
                     datastore.getCurrentUser().first()?.let {
-                        db.collection("pet_shops")
+                        db.collection(PetShopModel.REFERENCE_NAME)
                             .document(booking.petShop.id)
-                            .update("slot", FieldValue.increment(-1))
+                            .update("currentSlot", FieldValue.increment(-1))
                             .await()
-                        val newBooking = booking.copy(
-                            petShop = booking.petShop.copy(
-                                slot = booking.petShop.slot - 1
-                            )
-                        )
+
+                        val newBooking = booking.copy(petShop = booking.petShop.copy(slot = booking.petShop.slot - 1))
                         bookingDocument.set(newBooking).await()
                         _isBookingLoading.emit(false)
                         _isBookingSuccess.emit(None)

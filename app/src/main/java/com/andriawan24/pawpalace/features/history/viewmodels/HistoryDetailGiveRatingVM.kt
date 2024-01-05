@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andriawan24.pawpalace.data.models.BookingModel
 import com.andriawan24.pawpalace.data.models.PetShopModel
-import com.andriawan24.pawpalace.data.models.UserModel
 import com.andriawan24.pawpalace.utils.None
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -18,7 +17,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
-import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,7 +45,7 @@ class HistoryDetailGiveRatingVM @Inject constructor() : ViewModel() {
                     return@launch
                 }
 
-                db.collection("bookings")
+                db.collection(BookingModel.REFERENCE_NAME)
                     .document(booking.id)
                     .update(
                         "rating", rating,
@@ -56,7 +54,7 @@ class HistoryDetailGiveRatingVM @Inject constructor() : ViewModel() {
                     )
                     .await()
 
-                db.collection("pet_shops")
+                db.collection(PetShopModel.REFERENCE_NAME)
                     .document(booking.petShop.id)
                     .update(
                         "rating", FieldValue.increment(rating),

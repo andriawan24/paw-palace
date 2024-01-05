@@ -9,7 +9,6 @@ import com.andriawan24.pawpalace.data.models.UserModel
 import com.andriawan24.pawpalace.utils.None
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import com.google.firebase.firestore.firestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -18,16 +17,12 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileVM @Inject constructor(private val datastore: PawPalaceDatastore): ViewModel() {
 
     private val auth = Firebase.auth
-    private val db = Firebase.firestore
 
     private val _navigateToOnboarding = MutableSharedFlow<None>()
     val navigateToOnboarding = _navigateToOnboarding.asSharedFlow()
@@ -44,11 +39,9 @@ class ProfileVM @Inject constructor(private val datastore: PawPalaceDatastore): 
     fun signOut() {
         viewModelScope.launch {
             _isProfileLoading.emit(true)
-
             auth.signOut()
             datastore.setCurrentUser(null)
             datastore.setCurrentPetShop(null)
-
             _isProfileLoading.emit(false)
             _navigateToOnboarding.emit(None)
         }

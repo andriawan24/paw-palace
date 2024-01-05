@@ -93,7 +93,7 @@ class ChatDetailVM @Inject constructor(private val datastore: PawPalaceDatastore
     private fun getMessages(senderId: String, petShopId: String) {
         viewModelScope.launch {
             _getChatLoading.emit(true)
-            db.collection("chats")
+            db.collection(ChatModel.REFERENCE_NAME)
                 .where(
                     Filter.and(
                         Filter.equalTo("senderId", senderId),
@@ -109,29 +109,7 @@ class ChatDetailVM @Inject constructor(private val datastore: PawPalaceDatastore
                 }
                 .map { snapshots ->
                     snapshots.documents.map { document ->
-                        val sender = document.get("sender") as? HashMap<*, *>
-                        val receiver = document.get("receiver") as? HashMap<*, *>
-                        ChatModel(
-                            id = document.id,
-                            sender = UserModel(
-                                id = sender?.get("id").toString(),
-                                name = sender?.get("name").toString(),
-                                email = sender?.get("email").toString(),
-                                phoneNumber = sender?.get("phoneNumber").toString(),
-                                location = sender?.get("location").toString(),
-                            ),
-                            petShop = ChatModel.PetShop(
-                                id = receiver?.get("id").toString(),
-                                name = receiver?.get("name").toString(),
-                                userId = receiver?.get("userId").toString()
-                            ),
-                            text = document.getString("text").orEmpty(),
-                            createdAt = document.getDate("createdAt") ?: Date(),
-                            read = document.getBoolean("read") ?: false,
-                            senderId = document.getString("senderId").orEmpty(),
-                            petShopId = document.getString("petShopId").orEmpty(),
-                            fromSender = document.getBoolean("fromSender") ?: false
-                        )
+                        ChatModel.from(document)
                     }
                 }
                 .collectLatest {
@@ -150,7 +128,7 @@ class ChatDetailVM @Inject constructor(private val datastore: PawPalaceDatastore
     fun sendMessage(text: String, petShop: ChatModel.PetShop) {
         viewModelScope.launch {
             currentUser?.let {
-                val chatDoc = db.collection("chats")
+                val chatDoc = db.collection(ChatModel.REFERENCE_NAME)
                     .document()
 
                 val chat = ChatModel(
@@ -163,9 +141,7 @@ class ChatDetailVM @Inject constructor(private val datastore: PawPalaceDatastore
                 )
 
                 try {
-                    chatDoc
-                        .set(chat)
-                        .await()
+                    chatDoc.set(chat).await()
                 } catch (e: Exception) {
                     Timber.e(e)
                     _getChatError.emit(e.localizedMessage.orEmpty())

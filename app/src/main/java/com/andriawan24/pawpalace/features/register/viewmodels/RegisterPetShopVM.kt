@@ -59,15 +59,11 @@ class RegisterPetShopVM @Inject constructor(
                     val petShop = PetShopModel(
                         id = petShopId,
                         userId = user.uid,
-                        description = "",
-                        location = "",
-                        dailyPrice = 0,
-                        slot = 0,
                         name = name
                     )
 
                     if (!petShopDocument.exists()) {
-                        db.collection("pet_shops")
+                        db.collection(PetShopModel.REFERENCE_NAME)
                             .document(petShopId)
                             .set(petShop)
                             .await()
@@ -75,7 +71,6 @@ class RegisterPetShopVM @Inject constructor(
 
                     datastore.setCurrentUser(userModel)
                     datastore.setCurrentPetShop(petShop)
-
                     _isRegisterLoading.emit(false)
                     _registerSuccess.emit(petShopId)
                 }
@@ -110,7 +105,8 @@ class RegisterPetShopVM @Inject constructor(
                             location = "",
                             dailyPrice = 0,
                             slot = 0,
-                            name = name
+                            name = name,
+                            currentSlot = 0
                         )
 
                         db.collection("pet_shops")

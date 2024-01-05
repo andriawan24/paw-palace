@@ -1,6 +1,5 @@
 package com.andriawan24.pawpalace.features.booking.viewmodels
 
-import androidx.datastore.dataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andriawan24.pawpalace.data.local.PawPalaceDatastore
@@ -17,7 +16,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 import java.util.Date
 import javax.inject.Inject
@@ -64,9 +62,7 @@ class BookingFormVM @Inject constructor(private val datastore: PawPalaceDatastor
             try {
                 val user = Firebase.auth.currentUser
                 if (user != null) {
-                    val bookingDocument = db.collection("bookings")
-                        .document()
-
+                    val bookingDocument = db.collection(BookingModel.REFERENCE_NAME).document()
                     datastore.getCurrentUser().first()?.let {
                         val booking = BookingModel(
                             id = bookingDocument.id,
@@ -77,7 +73,6 @@ class BookingFormVM @Inject constructor(private val datastore: PawPalaceDatastor
                             description = description,
                             status = BookingModel.Status.PENDING.statusName
                         )
-
                         _isBookingLoading.emit(false)
                         _isBookingSuccess.emit(booking)
                     }

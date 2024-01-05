@@ -43,28 +43,13 @@ class DetailPetShopVM @Inject constructor(): ViewModel() {
         viewModelScope.launch {
             _isGetDetailLoading.emit(true)
             try {
-                val petShopDocument = db.collection("pet_shops")
+                val petShopDocument = db.collection(PetShopModel.REFERENCE_NAME)
                     .document(petShopId)
                     .get()
                     .await()
 
-                val petShop = PetShopModel(
-                    id = petShopDocument.id,
-                    userId = petShopDocument.getString("userId").orEmpty(),
-                    description = petShopDocument.getString("description").orEmpty(),
-                    location = petShopDocument.getString("location").orEmpty(),
-                    dailyPrice = petShopDocument.getLong("dailyPrice")?.toInt() ?: 0,
-                    slot = petShopDocument.getLong("slot")?.toInt() ?: 0,
-                    name = petShopDocument.getString("name").orEmpty(),
-                    rating = petShopDocument.getDouble("rating") ?: 0.0,
-                    rated = petShopDocument.getLong("rated")?.toInt() ?: 0
-                )
-
-                val petShopChat = ChatModel.PetShop(
-                    id = petShopDocument.id,
-                    userId = petShopDocument.getString("userId").orEmpty(),
-                    name = petShopDocument.getString("name").orEmpty()
-                )
+                val petShop = PetShopModel.from(petShopDocument)
+                val petShopChat = ChatModel.PetShop.from(petShopDocument)
 
                 _petShopChatState.emit(petShopChat)
                 _petShopState.emit(petShop)

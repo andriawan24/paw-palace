@@ -66,10 +66,8 @@ class HomeVM @Inject constructor(
                 val user = dataStore.getCurrentUser().first()!!
                 if (petShop != null) {
                     _setPetShopMode.emit(petShop)
-                    getPetOwners(petShop)
                 } else {
                     _setPetOwnerMode.emit(user)
-                    getPetShops(user)
                 }
             } else {
                 auth.signOut()
@@ -81,84 +79,45 @@ class HomeVM @Inject constructor(
         }
     }
 
-    private fun getPetOwners(user: PetShopModel) {
+    fun getPetOwners(user: PetShopModel) {
         viewModelScope.launch {
             _getPetOwnerLoading.emit(true)
             try {
-                val bookingDocuments = db.collection("bookings")
+                val bookingDocuments = db.collection(BookingModel.REFERENCE_NAME)
                     .whereNotEqualTo("petShop.id", user.id)
                     .get()
                     .await()
 
                 val bookings = bookingDocuments.documents.map {
-                    val petOwner = it.get("petOwner") as? HashMap<*, *>
-                    val petShop = it.get("petShop") as? HashMap<*, *>
-                    BookingModel(
-                        id = it.id,
-                        petShop = PetShopModel(
-                            id = petShop?.get("id").toString(),
-                            name = petShop?.get("name").toString(),
-                            description = petShop?.get("description").toString(),
-                            userId = petShop?.get("userId").toString(),
-                            location = petShop?.get("location").toString(),
-                            dailyPrice = petShop?.get("dailyPrice").toString().toIntOrNull()
-                                ?: 0,
-                            slot = petShop?.get("slot").toString().toIntOrNull() ?: 0,
-                        ),
-                        petOwner = UserModel(
-                            id = petOwner?.get("id").toString(),
-                            name = petOwner?.get("name").toString(),
-                            email = petOwner?.get("email").toString(),
-                            phoneNumber = petOwner?.get("phoneNumber").toString(),
-                            location = petOwner?.get("location").toString(),
-                        ),
-                        startDate = it.getDate("startDate") ?: Date(),
-                        endDate = it.getDate("endDate") ?: Date(),
-                        createdDate = it.getDate("createdDate") ?: Date(),
-                        description = it.getString("description").orEmpty(),
-                        status = it.getString("status").orEmpty(),
-                        rating = it.getDouble("rating") ?: 0.0
-                    )
+                    BookingModel.from(it)
+                }.filter {
+                    it.status == BookingModel.Status.PROCESS.statusName
                 }
 
-                withContext(Dispatchers.Main) {
-                    _getPetOwnerLoading.emit(false)
-                    _getPetOwnerSuccess.emit(Pair(bookings, user.slot))
-                }
+                _getPetOwnerLoading.emit(false)
+                _getPetOwnerSuccess.emit(Pair(bookings, user.slot))
             } catch (e: Exception) {
                 Timber.e(e)
-                _getPetShopsLoading.emit(false)
-                _getPetShopsError.emit(e.localizedMessage.orEmpty())
+                _getPetOwnerLoading.emit(false)
+                _getPetOwnerError.emit(e.localizedMessage.orEmpty())
             }
         }
     }
 
-    private fun getPetShops(user: UserModel) {
+    fun getPetShops(user: UserModel) {
         viewModelScope.launch {
             _getPetShopsLoading.emit(true)
             try {
-                val petShopsDocuments = db.collection("pet_shops")
+                val petShopsDocuments = db.collection(PetShopModel.REFERENCE_NAME)
                     .whereNotEqualTo("userId", user.id)
                     .get()
                     .await()
 
                 val petShops = petShopsDocuments.documents.map {
-                    PetShopModel(
-                        id = it.id,
-                        userId = it.getString("userId").orEmpty(),
-                        description = it.getString("description").orEmpty(),
-                        location = it.getString("location").orEmpty(),
-                        slot = it.getLong("slot")?.toInt() ?: 0,
-                        dailyPrice = it.getLong("dailyPrice")?.toInt() ?: 0,
-                        name = it.getString("name").orEmpty(),
-                        rating = it.getDouble("rating") ?: 0.0,
-                        rated = it.getLong("rated")?.toInt() ?: 0
-                    )
+                    PetShopModel.from(it)
                 }.filter {
                     it.slot > 0
                 }
-
-                Timber.d("getPetShops: $petShops")
 
                 withContext(Dispatchers.Main) {
                     _getPetShopsLoading.emit(false)

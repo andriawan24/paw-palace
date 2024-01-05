@@ -86,10 +86,10 @@ class BookingFormFragment : BaseFragment<FragmentBookingFormBinding, BookingForm
 
             if (validateInput(startDate, endDate, description)) {
                 viewModel.saveBooking(
-                    args.petShop,
-                    startDate,
-                    endDate,
-                    description
+                    petShop = args.petShop,
+                    startDate = startDate,
+                    endDate = endDate,
+                    description = description
                 )
             }
         }
