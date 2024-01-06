@@ -70,25 +70,34 @@ class EditProfileVM @Inject constructor(private val datastore: PawPalaceDatastor
                         .await()
 
                     val newUser = user.copy(
-                        name = name,
                         phoneNumber = phoneNumber
+                    )
+
+                    val newPetShop = petShop.copy(
+                        name = name,
+                        description = description,
+                        dailyPrice = dailyPrice,
+                        slot = slot,
+                        location = location
                     )
 
                     db.collection(UserModel.REFERENCE_NAME)
                         .document(currentFirebaseUser.uid)
-                        .update(
-                            "phoneNumber", newUser.phoneNumber
-                        )
+                        .update("phoneNumber", newUser.phoneNumber)
                         .await()
 
                     db.collection(PetShopModel.REFERENCE_NAME)
                         .document(petShop.id)
                         .update(
-                            "name", newUser.name,
-                            "phoneNumber", newUser.phoneNumber
+                            "name", newPetShop.name,
+                            "location", newPetShop.location,
+                            "description", newPetShop.description,
+                            "slot", newPetShop.slot,
+                            "dailyPrice", newPetShop.dailyPrice
                         )
                         .await()
 
+                    datastore.setCurrentPetShop(newPetShop)
                     datastore.setCurrentUser(newUser)
                     _isEditProfileLoading.emit(false)
                     _isEditProfileSuccess.emit(None)

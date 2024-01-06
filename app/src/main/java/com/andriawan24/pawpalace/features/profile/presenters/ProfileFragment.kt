@@ -73,16 +73,21 @@ class ProfileFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            viewModel.setPetShopMode.collectLatest {
-                binding.textViewName.text = it.first.second.name
-                binding.textViewEmail.text = it.first.first?.email.orEmpty()
-                it.second?.let { imageUri ->
+            viewModel.setPetShopMode.collectLatest { petShopMode ->
+                binding.textViewName.text = petShopMode.first.second.name
+                binding.textViewEmail.text = petShopMode.first.first?.email.orEmpty()
+                petShopMode.second?.let { imageUri ->
                     binding.imageViewProfile.setImageURI(imageUri)
                 }
 
-                it.first.first?.let { user ->
+                petShopMode.first.first?.let { user ->
                     binding.buttonEditProfile.setOnClickListener {
-                        findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToEditProfilePetShopFragment())
+                        findNavController().navigate(
+                            ProfileFragmentDirections.actionProfileFragmentToEditProfilePetShopFragment(
+                                petShop = petShopMode.first.second,
+                                user = user
+                            )
+                        )
                     }
                 }
             }
@@ -95,10 +100,11 @@ class ProfileFragment : Fragment() {
         imageUri?.let {
             binding.imageViewProfile.setImageURI(it)
         }
+
         binding.buttonEditProfile.setOnClickListener {
-            findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToEditProfilePetOwnerFragment(
-                user = petOwner
-            ))
+            findNavController().navigate(
+                ProfileFragmentDirections.actionProfileFragmentToEditProfilePetOwnerFragment(user = petOwner)
+            )
         }
     }
 }

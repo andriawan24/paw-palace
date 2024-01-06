@@ -42,6 +42,9 @@ class EditProfilePetOwnerFragment: BaseFragment<FragmentEditProfilePetOwnerBindi
             val phoneNumber = binding.editTextPhone.text.toString()
             viewModel.updateProfile(name, phoneNumber, args.user)
         }
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     private fun initUser(user: UserModel, imageUri: Uri?) {
