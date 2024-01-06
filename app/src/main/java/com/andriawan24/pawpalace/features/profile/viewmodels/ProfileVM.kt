@@ -30,7 +30,7 @@ class ProfileVM @Inject constructor(private val datastore: PawPalaceDatastore): 
     private val _isProfileLoading = MutableStateFlow(false)
     val isProfileLoading = _isProfileLoading.asStateFlow()
 
-    private val _setPetShopMode = MutableSharedFlow<PetShopModel>()
+    private val _setPetShopMode = MutableSharedFlow<Pair<Pair<UserModel?, PetShopModel>, Uri?>>()
     val setPetShopMode = _setPetShopMode.asSharedFlow()
 
     private val _setPetOwnerMode = MutableStateFlow<Pair<UserModel?, Uri?>?>(null)
@@ -52,7 +52,8 @@ class ProfileVM @Inject constructor(private val datastore: PawPalaceDatastore): 
             val petShop = datastore.getCurrentPetShop().first()
             if (auth.currentUser != null) {
                 if (petShop != null) {
-                    _setPetShopMode.emit(petShop)
+                    val user = datastore.getCurrentUser().first()
+                    _setPetShopMode.emit(Pair(Pair(user, petShop), auth.currentUser?.photoUrl))
                 } else {
                     val user = datastore.getCurrentUser().first()
                     _setPetOwnerMode.emit(Pair(user, auth.currentUser?.photoUrl))

@@ -50,12 +50,17 @@ class ChatDetailVM @Inject constructor(private val datastore: PawPalaceDatastore
 
     private var currentUser: UserModel? = null
 
-    fun initData(petShopId: String) {
+    fun initData(petShopId: String, userId: String) {
         viewModelScope.launch {
             val currentUser = auth.currentUser
+            val petShop = datastore.getCurrentPetShop().first()
             if (currentUser != null) {
                 this@ChatDetailVM.currentUser = datastore.getCurrentUser().first()
-                getMessages(currentUser.uid, petShopId)
+                if (petShop != null) {
+                    getMessagesPetShops(userId, petShopId)
+                } else {
+                    getMessages(currentUser.uid, petShopId)
+                }
                 updateAllMessageToRead(currentUser.uid, petShopId)
             } else {
                 auth.signOut()
@@ -87,6 +92,41 @@ class ChatDetailVM @Inject constructor(private val datastore: PawPalaceDatastore
                     .update("read", true)
                     .await()
             }
+        }
+    }
+
+    private fun getMessagesPetShops(senderId: String, petShopId: String) {
+        viewModelScope.launch {
+            _getChatLoading.emit(true)
+            db.collection(ChatModel.REFERENCE_NAME)
+                .where(
+                    Filter.and(
+                        Filter.equalTo("senderId", senderId),
+                        Filter.equalTo("petShopId", petShopId)
+                    )
+                )
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .snapshots()
+                .catch {
+                    Timber.e(it)
+                    _getChatLoading.emit(false)
+                    _getChatError.emit(it.localizedMessage.orEmpty())
+                }
+                .map { snapshots ->
+                    snapshots.documents.map { document ->
+                        ChatModel.from(document)
+                    }
+                }
+                .collectLatest {
+                    val chatByDate = it.groupBy { chat ->
+                        val simpleDateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+                        val date = simpleDateFormat.format(chat.createdAt)
+                        date
+                    }
+                    Timber.d("Chat by date $chatByDate")
+                    _getChatLoading.emit(false)
+                    _chats.emit(chatByDate)
+                }
         }
     }
 
@@ -125,26 +165,53 @@ class ChatDetailVM @Inject constructor(private val datastore: PawPalaceDatastore
         }
     }
 
-    fun sendMessage(text: String, petShop: ChatModel.PetShop) {
+    fun sendMessage(text: String, petShop: ChatModel.PetShop, userId: String = "") {
         viewModelScope.launch {
             currentUser?.let {
                 val chatDoc = db.collection(ChatModel.REFERENCE_NAME)
                     .document()
 
-                val chat = ChatModel(
-                    id = chatDoc.id,
-                    sender = it,
-                    petShop = petShop,
-                    senderId = it.id,
-                    petShopId = petShop.id,
-                    text = text
-                )
+                if (userId.isNotEmpty()) { // From Pet Shop
+                    val userDocument = db.collection(UserModel.REFERENCE_NAME)
+                        .document(userId)
+                        .get()
+                        .await()
 
-                try {
-                    chatDoc.set(chat).await()
-                } catch (e: Exception) {
-                    Timber.e(e)
-                    _getChatError.emit(e.localizedMessage.orEmpty())
+                    val user = UserModel.from(userDocument)
+
+                    val chat = ChatModel(
+                        id = chatDoc.id,
+                        sender = user,
+                        petShop = petShop,
+                        senderId = user.id,
+                        petShopId = petShop.id,
+                        text = text,
+                        fromSender = "petShop"
+                    )
+
+                    try {
+                        chatDoc.set(chat).await()
+                    } catch (e: Exception) {
+                        Timber.e(e)
+                        _getChatError.emit(e.localizedMessage.orEmpty())
+                    }
+                } else {
+                    val chat = ChatModel(
+                        id = chatDoc.id,
+                        sender = it,
+                        petShop = petShop,
+                        senderId = userId.ifEmpty { it.id },
+                        petShopId = petShop.id,
+                        text = text,
+                        fromSender = "petOwner"
+                    )
+
+                    try {
+                        chatDoc.set(chat).await()
+                    } catch (e: Exception) {
+                        Timber.e(e)
+                        _getChatError.emit(e.localizedMessage.orEmpty())
+                    }
                 }
             }
         }

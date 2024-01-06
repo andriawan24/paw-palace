@@ -49,6 +49,9 @@
         <action
             android:id="@+id/action_homeFragment_to_chatDetailFragment"
             app:destination="@id/chatDetailFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_historyDetailDialogFragment"
+            app:destination="@id/historyDetailDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/chatFragment"
@@ -124,13 +127,18 @@
         android:name="com.andriawan24.pawpalace.features.chat.presenters.ChatDetailFragment"
         android:label="ChatDetailFragment" >
         <argument
-            android:name="petShop"
-            app:argType="com.andriawan24.pawpalace.data.models.ChatModel$PetShop" />
-        <argument
             android:name="defaultMessage"
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null" />
+        <argument
+            android:name="petOwner"
+            app:argType="com.andriawan24.pawpalace.data.models.UserModel"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="petShop"
+            app:argType="com.andriawan24.pawpalace.data.models.ChatModel$PetShop" />
     </fragment>
     <fragment
         android:id="@+id/bookingFormFragment"
@@ -196,6 +204,10 @@
         <argument
             android:name="booking"
             app:argType="com.andriawan24.pawpalace.data.models.BookingModel" />
+        <argument
+            android:name="isPetShop"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </dialog>
     <dialog
         android:id="@+id/historyGiveRatingDialogFragment"

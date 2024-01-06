@@ -82,7 +82,11 @@ class ProfileFragment : Fragment() {
 
         lifecycleScope.launch {
             viewModel.setPetShopMode.collectLatest {
-
+                binding.textViewName.text = it.first.second.name
+                binding.textViewEmail.text = it.first.first?.email.orEmpty()
+                it.second?.let { imageUri ->
+                    binding.imageViewProfile.setImageURI(imageUri)
+                }
             }
         }
     }

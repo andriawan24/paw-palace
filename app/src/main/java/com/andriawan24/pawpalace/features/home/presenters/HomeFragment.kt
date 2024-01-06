@@ -19,20 +19,20 @@ import com.andriawan24.pawpalace.base.BaseFragment
 import com.andriawan24.pawpalace.data.models.BookingModel
 import com.andriawan24.pawpalace.data.models.ChatModel
 import com.andriawan24.pawpalace.data.models.PetShopModel
+import com.andriawan24.pawpalace.data.models.UserModel
 import com.andriawan24.pawpalace.databinding.FragmentHomeBinding
 import com.andriawan24.pawpalace.features.home.viewmodels.HomeVM
 import com.andriawan24.pawpalace.utils.GridSpacingItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding, HomeVM>(),
-    PetShopItemAdapter.OnClickListener {
+    PetShopItemAdapter.OnClickListener, SlotItemAdapter.OnClickListener {
 
     private val petShopAdapter = PetShopItemAdapter(this)
-    private val slotItemAdapter = SlotItemAdapter()
+    private val slotItemAdapter = SlotItemAdapter(this)
     override val viewModel: HomeVM by viewModels()
     override val binding: FragmentHomeBinding by lazy {
         FragmentHomeBinding.inflate(layoutInflater)
@@ -113,7 +113,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeVM>(),
                 it.first.indices.forEach { bookingIndex ->
                     bookings[bookingIndex] = it.first[bookingIndex]
                 }
-                Timber.d("Bookings $bookings, Slot: ${it.second}")
                 slotItemAdapter.setData(bookings)
             }
         }
@@ -173,9 +172,32 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeVM>(),
             userId = petShop.userId,
             name = petShop.name
         )
+
         findNavController().navigate(
             HomeFragmentDirections.actionHomeFragmentToChatDetailFragment(
-                petShopChat
+                petShop = petShopChat
+            )
+        )
+    }
+
+    override fun onDetailOrderClickedClicked(booking: BookingModel) {
+        findNavController().navigate(
+            HomeFragmentDirections.actionHomeFragmentToHistoryDetailDialogFragment(
+                booking,
+                isPetShop = true
+            )
+        )
+    }
+
+    override fun onChatClicked(petOwner: UserModel, petShopModel: PetShopModel) {
+        findNavController().navigate(
+            HomeFragmentDirections.actionHomeFragmentToChatDetailFragment(
+                petOwner = petOwner,
+                petShop = ChatModel.PetShop(
+                    petShopModel.id,
+                    petShopModel.userId,
+                    petShopModel.name
+                )
             )
         )
     }

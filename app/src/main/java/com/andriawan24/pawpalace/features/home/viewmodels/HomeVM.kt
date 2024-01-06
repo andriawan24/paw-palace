@@ -84,7 +84,7 @@ class HomeVM @Inject constructor(
             _getPetOwnerLoading.emit(true)
             try {
                 val bookingDocuments = db.collection(BookingModel.REFERENCE_NAME)
-                    .whereNotEqualTo("petShop.id", user.id)
+                    .whereEqualTo("petShop.id", user.id)
                     .get()
                     .await()
 

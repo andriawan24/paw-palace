@@ -189,4 +189,42 @@
         tools:text="Kucing saya sangat suka tidur setiap hari dan tidak berbuat apa apa  jadi tolong jangan diganggu. Cukup berikan dia makan ketika dia lapar"
         android:fontFamily="@font/inter" />
 
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linear_layout_button_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:visibility="gone"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_close"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_weight="0.4"
+            android:text="@string/close"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="8dp"
+            android:maxLines="1"
+            android:fontFamily="@font/inter_semibold"
+            android:textColor="@color/colorPrimary"
+            app:strokeColor="@color/colorPrimary"
+            app:cornerRadius="4dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_positive"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="0.6"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="32dp"
+            android:text="@string/approve"
+            android:maxLines="1"
+            android:fontFamily="@font/inter_semibold"
+            app:backgroundTint="@color/colorPrimary"
+            app:cornerRadius="4dp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
 </androidx.appcompat.widget.LinearLayoutCompat>

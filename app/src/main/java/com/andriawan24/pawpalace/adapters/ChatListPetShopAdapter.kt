@@ -27,7 +27,7 @@ class ChatListPetShopAdapter(
         fun bind(chat: Pair<UserModel, ChatModel>) {
             binding.textViewName.text = chat.first.name
             binding.textViewLastChat.text = chat.second.text
-            if (!chat.second.read && !chat.second.fromSender) {
+            if (!chat.second.read && chat.second.fromSender != "petOwner") {
                 binding.textViewLastChat.setTextColor(
                     ContextCompat.getColor(
                         binding.root.context,
@@ -44,7 +44,7 @@ class ChatListPetShopAdapter(
             }
             val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             binding.textViewDate.text = dateFormatter.format(chat.second.createdAt)
-            binding.linearLayoutContainer.setOnClickListener { listener.onChatPetShopClicked(chat.first) }
+            binding.linearLayoutContainer.setOnClickListener { listener.onChatPetShopClicked(chat.second) }
         }
     }
 
@@ -67,6 +67,6 @@ class ChatListPetShopAdapter(
     }
 
     interface OnClickListener {
-        fun onChatPetShopClicked(petShop: UserModel)
+        fun onChatPetShopClicked(chat: ChatModel)
     }
 }

@@ -78,10 +78,15 @@ class ChatListFragment : BaseFragment<FragmentChatListBinding, ChatListVM>(),
     }
 
     override fun onChatClicked(petShop: ChatModel.PetShop) {
-        findNavController().navigate(ChatListFragmentDirections.actionChatFragmentToChatDetailFragment(petShop))
+        findNavController().navigate(ChatListFragmentDirections.actionChatFragmentToChatDetailFragment(
+            petShop = petShop
+        ))
     }
 
-    override fun onChatPetShopClicked(petShop: UserModel) {
-
+    override fun onChatPetShopClicked(chat: ChatModel) {
+        findNavController().navigate(ChatListFragmentDirections.actionChatFragmentToChatDetailFragment(
+            petOwner = chat.sender,
+            petShop = chat.petShop
+        ))
     }
 }

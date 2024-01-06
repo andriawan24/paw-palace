@@ -26,7 +26,7 @@ class ChatListAdapter(
         fun bind(chat: Pair<ChatModel.PetShop, ChatModel>) {
             binding.textViewName.text = chat.first.name
             binding.textViewLastChat.text = chat.second.text
-            if (!chat.second.read && !chat.second.fromSender) {
+            if (!chat.second.read && chat.second.fromSender != "petOwner") {
                 binding.textViewLastChat.setTextColor(
                     ContextCompat.getColor(
                         binding.root.context,

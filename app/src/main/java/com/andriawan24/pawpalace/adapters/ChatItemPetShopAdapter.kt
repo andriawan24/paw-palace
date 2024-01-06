@@ -12,7 +12,7 @@ import com.andriawan24.pawpalace.utils.RecyclerDiffUtil
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class ChatItemAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ChatItemPetShopAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var chats = emptyList<Any>()
 
@@ -82,7 +82,7 @@ class ChatItemAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val chat = chats[position]
 
         if (chat is ChatModel) {
-            if (chat.fromSender == "petOwner") {
+            if (chat.fromSender == "petShop") {
                 (holder as ChatItemSenderViewHolder).bind(chat)
             } else {
                 (holder as ChatItemReceiverViewHolder).bind(chat)
@@ -95,7 +95,7 @@ class ChatItemAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun getItemViewType(position: Int): Int {
         val chat = chats[position]
         return if (chat is ChatModel) {
-            if (chat.fromSender == "petOwner") {
+            if (chat.fromSender == "petShop") {
                 VIEW_TYPE_SENDER
             } else {
                 VIEW_TYPE_RECEIVER
