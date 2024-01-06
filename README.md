@@ -1,5 +1,5 @@
 
-# Hydration Tracker
+# Paw Palace
 
 Welcome to Paw Palace, the ultimate pet hotel designed for your furry friends! Whether you're heading out for a vacation or a busy day at work, Paw Palace is the perfect retreat for your beloved pets.
 ## Tech Stack
