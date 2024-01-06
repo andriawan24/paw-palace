@@ -103,4 +103,8 @@ Di "Sahabat Peliharaan" Petshop, kami merevolusi cara penitipan hewan dengan men
     <string name="oops_a_seat_is_empty">Oops, a seat is empty</string>
     <string name="close">Close</string>
     <string name="approve">Approve</string>
+    <string name="all_location">All Locations</string>
+    <string name="city_name">City</string>
+    <string name="change_location">Change Location</string>
+    <string name="location_not_set">Location not set</string>
 </resources>

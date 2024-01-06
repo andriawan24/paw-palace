@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andriawan24.pawpalace.data.local.PawPalaceDatastore
+import com.andriawan24.pawpalace.data.models.PetShopModel
 import com.andriawan24.pawpalace.data.models.UserModel
 import com.andriawan24.pawpalace.utils.None
 import com.google.firebase.Firebase
@@ -41,6 +42,65 @@ class EditProfileVM @Inject constructor(private val datastore: PawPalaceDatastor
     fun updateImageUri(imageUri: Uri?) {
         viewModelScope.launch {
             _imageUri.emit(imageUri)
+        }
+    }
+
+    fun updatePetShop(
+        name: String,
+        phoneNumber: String,
+        user: UserModel,
+        location: String,
+        description: String,
+        dailyPrice: Int,
+        slot: Int
+    ) {
+        viewModelScope.launch {
+            _isEditProfileLoading.emit(true)
+            try {
+                val updateProfileRequest = userProfileChangeRequest {
+                    displayName = name
+                    photoUri = _imageUri.value
+                }
+
+                val currentFirebaseUser = auth.currentUser
+                val petShop = datastore.getCurrentPetShop().first()
+                if (currentFirebaseUser != null && petShop != null) {
+                    currentFirebaseUser
+                        .updateProfile(updateProfileRequest)
+                        .await()
+
+                    val newUser = user.copy(
+                        name = name,
+                        phoneNumber = phoneNumber
+                    )
+
+                    db.collection(UserModel.REFERENCE_NAME)
+                        .document(currentFirebaseUser.uid)
+                        .update(
+                            "phoneNumber", newUser.phoneNumber
+                        )
+                        .await()
+
+                    db.collection(PetShopModel.REFERENCE_NAME)
+                        .document(petShop.id)
+                        .update(
+                            "name", newUser.name,
+                            "phoneNumber", newUser.phoneNumber
+                        )
+                        .await()
+
+                    datastore.setCurrentUser(newUser)
+                    _isEditProfileLoading.emit(false)
+                    _isEditProfileSuccess.emit(None)
+                } else {
+                    _isEditProfileLoading.emit(false)
+                    _isEditProfileError.emit("Unauthenticated Request")
+                }
+            } catch (e: Exception) {
+                Timber.e(e)
+                _isEditProfileLoading.emit(false)
+                _isEditProfileError.emit(e.localizedMessage.orEmpty())
+            }
         }
     }
 

@@ -52,6 +52,9 @@
         <action
             android:id="@+id/action_homeFragment_to_historyDetailDialogFragment"
             app:destination="@id/historyDetailDialogFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_fragmentSetLocationDialog"
+            app:destination="@id/fragmentSetLocationDialog" />
     </fragment>
     <fragment
         android:id="@+id/chatFragment"
@@ -82,6 +85,9 @@
         <action
             android:id="@+id/action_profileFragment_to_editProfilePetOwnerFragment"
             app:destination="@id/editProfilePetOwnerFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_editProfilePetShopFragment"
+            app:destination="@id/editProfilePetShopFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginPetShopFragment"
@@ -224,5 +230,24 @@
         <argument
             android:name="user"
             app:argType="com.andriawan24.pawpalace.data.models.UserModel" />
+    </fragment>
+    <dialog
+        android:id="@+id/fragmentSetLocationDialog"
+        android:name="com.andriawan24.pawpalace.features.home.presenters.FragmentSetLocationDialog"
+        android:label="FragmentSetLocationDialog" >
+        <argument
+            android:name="location"
+            app:argType="string" />
+    </dialog>
+    <fragment
+        android:id="@+id/editProfilePetShopFragment"
+        android:name="com.andriawan24.pawpalace.features.profile.presenters.EditProfilePetShopFragment"
+        android:label="EditProfilePetShopFragment" >
+        <argument
+            android:name="user"
+            app:argType="com.andriawan24.pawpalace.data.models.UserModel" />
+        <argument
+            android:name="petShop"
+            app:argType="com.andriawan24.pawpalace.data.models.PetShopModel" />
     </fragment>
 </navigation>

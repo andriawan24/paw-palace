@@ -17,12 +17,12 @@
         android:orientation="horizontal">
 
         <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/inter_semibold"
-        android:textSize="16sp"
-        android:textColor="@color/textPrimary"
-        android:text="@string/rating_petshop" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_semibold"
+            android:textSize="16sp"
+            android:textColor="@color/textPrimary"
+            android:text="@string/rating_petshop" />
 
         <TextView
             android:id="@+id/text_view_name"

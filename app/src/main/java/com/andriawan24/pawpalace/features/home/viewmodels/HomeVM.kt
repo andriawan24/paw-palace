@@ -104,9 +104,10 @@ class HomeVM @Inject constructor(
         }
     }
 
-    fun getPetShops(user: UserModel) {
+    fun getPetShops(location: String = "", query: String = "") {
         viewModelScope.launch {
             _getPetShopsLoading.emit(true)
+            val user = dataStore.getCurrentUser().first()!!
             try {
                 val petShopsDocuments = db.collection(PetShopModel.REFERENCE_NAME)
                     .whereNotEqualTo("userId", user.id)
@@ -116,7 +117,10 @@ class HomeVM @Inject constructor(
                 val petShops = petShopsDocuments.documents.map {
                     PetShopModel.from(it)
                 }.filter {
-                    it.slot > 0
+                    it.slot > 0 && it.location.contains(
+                        location,
+                        ignoreCase = true
+                    ) && it.name.contains(query, ignoreCase = true)
                 }
 
                 withContext(Dispatchers.Main) {

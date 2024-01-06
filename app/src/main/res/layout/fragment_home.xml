@@ -93,6 +93,16 @@
                 android:fontFamily="@font/inter"
                 android:text="@string/location" />
 
+            <TextView
+                android:id="@+id/button_change_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginStart="4dp"
+                android:textSize="12sp"
+                android:fontFamily="@font/inter_semibold"
+                android:text="@string/change_location" />
+
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <TextView

@@ -8,6 +8,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.View.GONE
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -38,8 +39,31 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeVM>(),
         FragmentHomeBinding.inflate(layoutInflater)
     }
 
-    override fun onInitViews() {
+    private var currentLocation = ""
 
+    override fun onInitViews() {
+        binding.textViewLocation.text = getString(R.string.location_not_set)
+        setFragmentResultListener(FragmentSetLocationDialog.SET_LOCATION_REQUEST_KEY) { _, bundle ->
+            val location = bundle.getString(FragmentSetLocationDialog.SET_LOCATION_RESULT_KEY).orEmpty()
+            currentLocation = location
+            binding.textViewLocation.text = currentLocation.ifEmpty { getString(R.string.location_not_set) }
+            viewModel.getPetShops(location = currentLocation, query = binding.textInputEditTextSearch.text.toString())
+        }
+
+        binding.buttonChangeLocation.setOnClickListener {
+            findNavController().navigate(
+                HomeFragmentDirections.actionHomeFragmentToFragmentSetLocationDialog(
+                    currentLocation
+                )
+            )
+        }
+
+        binding.buttonSearch.setOnClickListener {
+            viewModel.getPetShops(
+                location = currentLocation,
+                query = binding.textInputEditTextSearch.text.toString()
+            )
+        }
     }
 
     override fun onResume() {
@@ -69,7 +93,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeVM>(),
                     addItemDecoration(GridSpacingItemDecoration(2, 20))
                 }
                 setupPetOwnerMode(location = it.location)
-                viewModel.getPetShops(it)
+                viewModel.getPetShops()
             }
         }
 
@@ -135,7 +159,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeVM>(),
         )
         binding.textViewTitle.text = spannable
 
-        binding.textViewLocation.text = petShop.location.ifEmpty { "Location not set" }
+        binding.buttonChangeLocation.visibility = GONE
+        binding.textViewLocation.text =
+            petShop.location.ifEmpty { getString(R.string.location_not_set) }
         binding.textViewPetShopCount.text = getString(R.string.showing_your_slot)
         binding.textInputLayoutSearch.visibility = GONE
         binding.buttonSearch.visibility = GONE
@@ -157,7 +183,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeVM>(),
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         binding.textViewTitle.text = spannable
-        binding.textViewLocation.text = location.ifEmpty { "Location not set" }
     }
 
     override fun onDetailClicked(id: String) {

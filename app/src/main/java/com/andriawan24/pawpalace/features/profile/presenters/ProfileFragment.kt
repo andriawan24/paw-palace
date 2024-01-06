@@ -48,14 +48,6 @@ class ProfileFragment : Fragment() {
         binding.buttonLogout.setOnClickListener {
             viewModel.signOut()
         }
-
-        binding.buttonEditProfile.setOnClickListener {
-            viewModel.setPetOwnerMode.value?.first?.let { user ->
-                findNavController().navigate(
-                    ProfileFragmentDirections.actionProfileFragmentToEditProfilePetOwnerFragment(user)
-                )
-            }
-        }
     }
 
     private fun initObserver() {
@@ -74,6 +66,9 @@ class ProfileFragment : Fragment() {
 
         lifecycleScope.launch {
             viewModel.setPetOwnerMode.collectLatest {
+                binding.buttonEditProfile.setOnClickListener {
+                    findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToEditProfilePetOwnerFragment())
+                }
                 it?.first?.let { user ->
                     setupPetOwner(user, it.second)
                 }
